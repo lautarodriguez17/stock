@@ -1,5 +1,4 @@
 import React from "react";
-import Card from "../components/Card.jsx";
 import { useStockContext } from "../state/StockContext.jsx";
 import { useStock } from "../hooks/useStock.js";
 
@@ -14,56 +13,95 @@ export default function Dashboard() {
       stock: stockById[p.id] ?? 0
     }))
     .filter((p) => p.stock <= (p.minStock ?? 0))
-    .sort((a, b) => (a.stock - b.stock));
+    .sort((a, b) => a.stock - b.stock);
 
   return (
-    <div className="grid3">
-      <Card title="Resumen">
-        <div className="kpi">
-          <div>
-            <div className="kpiLabel">Productos</div>
-            <div className="kpiValue">{metrics.totalProducts}</div>
+    <div className="dashboardPage">
+      <section className="alertCard">
+        <div className="alertTop">
+          <div className="alertLabel">
+            <span className="alertIcon" aria-hidden="true">⚠️</span>
+            <span>Stock crítico ({lowProducts.length})</span>
           </div>
-          <div>
-            <div className="kpiLabel">Stock bajo</div>
-            <div className="kpiValue">{metrics.lowStockCount}</div>
-          </div>
+          <span className="alertChevron" aria-hidden="true">›</span>
         </div>
-      </Card>
 
-      <Card title="Valuación estimada (costo)">
-        <div className="kpiValue">{money(metrics.valuation)}</div>
-        <p className="muted">Suma de (stock * costo) para productos activos.</p>
-      </Card>
+        <div className="alertBody">
+          {lowProducts.length ? (
+            <div className="criticalList">
+              {lowProducts.map((criticalProduct) => (
+                <div className="criticalRow" key={criticalProduct.id}>
+                  <div className="productInfo">
+                    <div className="productTitle">
+                      <span>{criticalProduct.name}</span>
+                      {criticalProduct.sku ? <span className="muted">({criticalProduct.sku})</span> : null}
+                      <span className="badgeCritical">Stock crítico</span>
+                    </div>
+                    <div className="muted">{criticalProduct.category || "Sin categoría"}</div>
+                    <div className="stockRow">
+                      <span>Stock actual: <span className="value">{criticalProduct.stock}</span></span>
+                      <span>Mínimo: <span className="value">{criticalProduct.minStock ?? 0}</span></span>
+                    </div>
+                  </div>
 
-      <Card title="Margen potencial (sobre stock)">
-        <div className="kpiValue">{money(metrics.potentialMargin)}</div>
-        <p className="muted">Suma de (stock * (precio - costo)).</p>
-      </Card>
-
-      <Card title="Alertas de stock bajo" right={<span className="pill">{lowProducts.length} items</span>}>
-        {lowProducts.length === 0 ? (
-          <p className="muted">No hay alertas 🎉</p>
-        ) : (
-          <ul className="list">
-            {lowProducts.slice(0, 10).map((p) => (
-              <li key={p.id} className="listItem">
-                <div>
-                  <b>{p.name}</b> <span className="muted">({p.sku})</span>
-                  <div className="muted">{p.category}</div>
+                  <div className="criticalActions">
+                    <button className="btnCTA" type="button">+ Registrar compra</button>
+                    <button className="btnGhost" type="button">Ver producto</button>
+                  </div>
                 </div>
-                <div className="right">
-                  <span className="badgeLow">Stock {p.stock} / Mín {p.minStock}</span>
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
-      </Card>
+              ))}
+            </div>
+          ) : (
+            <div className="criticalEmpty">
+              <span role="img" aria-label="ok">✅</span> Todo en orden. No hay productos en stock crítico.
+            </div>
+          )}
+        </div>
+      </section>
+
+      <div className="summaryGrid">
+        <section className="infoCard">
+          <h3 className="infoTitle">Resumen Operativo</h3>
+          <div className="infoItem">Productos activos: <strong>{metrics.totalProducts}</strong></div>
+          <div className="infoItem">Con stock bajo: <strong>{metrics.lowStockCount}</strong></div>
+        </section>
+
+        <section className="infoCard">
+          <h3 className="infoTitle">Capital en Stock</h3>
+          <div className="infoColumns">
+            <div>
+              <div className="infoLabel">Costo total:</div>
+              <div className="infoAmount">{money(metrics.valuation)}</div>
+            </div>
+            {/* <div>
+              <div className="infoLabel">Ganancia bruta:</div>
+              <div className="infoAmount">{money(metrics.grossSales)}</div>
+            </div> */}
+            <div>
+              <div className="infoLabel">Ganancia:</div>
+              <div className="infoAmount">{money(metrics.potentialMargin)}</div>
+            </div>
+          </div>
+          <p className="muted">Estimado sobre productos activos</p>
+        </section>
+      </div>
+
+      <section className="quickActionsCard">
+        <h3 className="infoTitle">Acciones Rápidas</h3>
+        <div className="quickButtons">
+          <button className="quickButton green" type="button">+ Agregar producto</button>
+          <button className="quickButton red" type="button">+ Registrar compra</button>
+          <button className="quickButton blue" type="button">+ Registrar venta</button>
+        </div>
+      </section>
     </div>
   );
 }
 
 function money(n) {
-  return Number(n || 0).toLocaleString("es-AR", { style: "currency", currency: "ARS" });
+  return Number(n || 0).toLocaleString("es-AR", {
+    style: "currency",
+    currency: "ARS",
+    maximumFractionDigits: 0
+  });
 }

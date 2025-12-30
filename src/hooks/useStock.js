@@ -11,8 +11,8 @@ export function useStock() {
   );
 
   const metrics = useMemo(
-    () => computeMetrics(state.products, stockById),
-    [state.products, stockById]
+    () => computeMetrics(state.products, stockById, state.movements),
+    [state.products, stockById, state.movements]
   );
 
   return { stockById, metrics };

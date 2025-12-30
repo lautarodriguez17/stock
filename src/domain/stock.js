@@ -22,18 +22,21 @@ export function computeStock(products, movements) {
 }
 
 /**
- * Métricas pedidas:
+ * Métricas:
  * - total productos
  * - low stock count
  * - valuación estimada: sum(stock * cost)
- * - margen estimado (unitario): price - cost (promedio simple) + total potencial (stock * (price-cost))
+ * - margen estimado (unitario): price - cost + total potencial (stock * (price-cost))
+ * - ganancia bruta: sum(qty * price) de movimientos de salida
  */
-export function computeMetrics(products, stockById) {
+export function computeMetrics(products, stockById, movements = []) {
   const activeProducts = products.filter((p) => p.active !== false);
+  const productById = Object.fromEntries(products.map((p) => [p.id, p]));
 
   let lowStockCount = 0;
   let valuation = 0; // stock * cost
   let potentialMargin = 0; // stock * (price-cost)
+  let grossSales = 0; // total de ventas registradas
 
   for (const p of activeProducts) {
     const stock = stockById[p.id] ?? 0;
@@ -43,10 +46,18 @@ export function computeMetrics(products, stockById) {
     potentialMargin += stock * ((p.price ?? 0) - (p.cost ?? 0));
   }
 
+  for (const m of movements) {
+    if (m.type !== MovementType.OUT) continue;
+    const product = productById[m.productId];
+    if (!product) continue;
+    grossSales += (product.price ?? 0) * (m.qty ?? 0);
+  }
+
   return {
     totalProducts: activeProducts.length,
     lowStockCount,
     valuation,
-    potentialMargin
+    potentialMargin,
+    grossSales
   };
 }
