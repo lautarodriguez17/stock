@@ -1,5 +1,4 @@
 import React, { useMemo, useState } from "react";
-import Card from "../components/Card.jsx";
 import ProductForm from "../components/ProductForm.jsx";
 import ProductTable from "../components/ProductTable.jsx";
 import { useProducts } from "../hooks/useProducts.js";
@@ -30,17 +29,24 @@ export default function ProductsPage() {
   }, [products, q, cat]);
 
   return (
-    <div className="grid2">
-      <Card
-        title={editing ? "Editar producto" : "Agregar producto"}
-        right={
-          editing ? (
-            <button className="btn" onClick={() => setEditing(null)}>Nuevo</button>
-          ) : null
-        }
-      >
+    <div className="productPage">
+      <section className="productCard">
+        <div className="productCardHeader">
+          <div className="productCardTitle">
+            <span className="productCardIcon" aria-hidden="true">➕</span>
+            <div>
+              <h3>Agregar Nuevo Producto</h3>
+              <p className="muted">Completa los datos para sumar un nuevo ítem al inventario.</p>
+            </div>
+          </div>
+          {editing ? (
+            <button className="btnGhost" onClick={() => setEditing(null)}>Nuevo</button>
+          ) : null}
+        </div>
+
         <ProductForm
           initialValue={editing}
+          categoryOptions={categories.filter((c) => c !== "ALL")}
           errors={errorList}
           onSubmit={(data) => {
             const ok = upsertProduct(data);
@@ -49,36 +55,43 @@ export default function ProductsPage() {
           }}
           onCancel={editing ? () => setEditing(null) : null}
         />
-      </Card>
+      </section>
 
-      <Card title="Listado">
-        <div className="row gap">
-          <input
-            className="input"
-            placeholder="Buscar por nombre o SKU..."
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
-          />
-          <select className="input" value={cat} onChange={(e) => setCat(e.target.value)}>
-            {categories.map((c) => (
-              <option key={c} value={c}>{c}</option>
-            ))}
-          </select>
+      <section className="productCard">
+        <div className="productCardHeader">
+          <div className="productCardTitle">
+            <span className="productCardIcon" aria-hidden="true">📦</span>
+            <div>
+              <h3>Listado de Productos</h3>
+              <p className="muted">Gestiona los productos activos.</p>
+            </div>
+          </div>
+          <div className="productFilters">
+            <input
+              className="input"
+              placeholder="Buscar producto..."
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+            />
+            <select className="input selectInput" value={cat} onChange={(e) => setCat(e.target.value)}>
+              {categories.map((c) => (
+                <option key={c} value={c}>{c}</option>
+              ))}
+            </select>
+          </div>
         </div>
 
-        <div style={{ marginTop: 10 }}>
-          <ProductTable
-            products={filtered}
-            stockById={stockById}
-            onEdit={(p) => setEditing(p)}
-            onDeactivate={(id) => deactivateProduct(id)}
-          />
-        </div>
+        <ProductTable
+          products={filtered}
+          stockById={stockById}
+          onEdit={(p) => setEditing(p)}
+          onDeactivate={(id) => deactivateProduct(id)}
+        />
 
-        <p className="muted" style={{ marginTop: 10 }}>
-          Tip: doble click no edita acá (a propósito). Editás con el formulario para mantener validaciones claras.
+        <p className="muted productNote">
+          Nota: Usa los botones para editar o desactivar productos.
         </p>
-      </Card>
+      </section>
     </div>
   );
 }

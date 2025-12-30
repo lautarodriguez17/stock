@@ -6,10 +6,12 @@ export default function ProductTable({ products, stockById, onEdit, onDeactivate
     return products.map((p) => {
       const stock = stockById[p.id] ?? 0;
       const low = stock <= (p.minStock ?? 0);
+      const status = low ? (stock === 0 ? "Bajo" : "Stock bajo") : "OK";
       return {
         ...p,
         stock,
-        _rowClass: low ? "rowLow" : ""
+        status,
+        _rowClass: ""
       };
     });
   }, [products, stockById]);
@@ -29,22 +31,31 @@ export default function ProductTable({ products, stockById, onEdit, onDeactivate
       render: (r) => formatMoney(r.price)
     },
     {
-      key: "stock",
-      header: "Stock",
+      key: "status",
+      header: "Estado",
+      render: (r) =>
+        r.status === "OK" ? null : (
+          <span className={`pillStatus ${r.status === "Bajo" ? "pillDanger" : "pillWarn"}`}>
+            {r.status}
+          </span>
+        )
+    },
+    {
+      key: "stockMin",
+      header: "Stock / Min",
       render: (r) => (
-        <span>
-          <b>{r.stock}</b> {r.stock <= (r.minStock ?? 0) ? <span className="badgeLow">Bajo</span> : null}
+        <span className="stockMin">
+          {r.stock} <span className="muted">/</span> {r.minStock ?? 0}
         </span>
       )
     },
-    { key: "minStock", header: "Mín" },
     {
       key: "actions",
       header: "Acciones",
       render: (r) => (
         <div className="actions">
-          <button className="btn" onClick={() => onEdit(r)}>Editar</button>
-          <button className="btnDanger" onClick={() => onDeactivate(r.id)}>Inactivar</button>
+          <button className="btnTablePrimary" onClick={() => onEdit(r)}>Editar</button>
+          <button className="btnTableGhost" onClick={() => onDeactivate(r.id)}>Desactivar</button>
         </div>
       )
     }
@@ -55,5 +66,5 @@ export default function ProductTable({ products, stockById, onEdit, onDeactivate
 
 function formatMoney(n) {
   const v = Number(n || 0);
-  return v.toLocaleString("es-AR", { style: "currency", currency: "ARS" });
+  return v.toLocaleString("es-AR", { style: "currency", currency: "ARS", maximumFractionDigits: 0 });
 }

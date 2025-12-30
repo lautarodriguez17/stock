@@ -123,6 +123,24 @@
   color: #d9202f;
   background: #fff;
 }
+.btnGhost {
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid #e2e5ec;
+  background: #fff;
+  color: #374151;
+  cursor: pointer;
+}
+.btnSuccess {
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid #3a8c45;
+  background: linear-gradient(180deg, #4da45c, #428d4d);
+  color: #fff;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 10px 22px rgba(66, 141, 77, 0.25);
+}
 
 .tableWrap { overflow-x: auto; }
 .table { width: 100%; border-collapse: collapse; }
@@ -288,3 +306,103 @@
 .quickButton.green { background: #4ca44f; border-color: #3e8a42; }
 .quickButton.red { background: #d5202f; border-color: #b51925; }
 .quickButton.blue { background: #3d73c3; border-color: #2f5da4; }
+
+/* Productos */
+.productPage {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.productCard {
+  background: #fdfdfd;
+  border: 1px solid #e6eaf0;
+  border-radius: 18px;
+  padding: 16px 18px;
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.04);
+}
+.productCardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+.productCardTitle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.productCardTitle h3 { margin: 0; font-size: 16px; font-weight: 800; color: #1f2937; }
+.productCardIcon {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: #eef1f7;
+  display: grid;
+  place-items: center;
+  font-size: 16px;
+}
+.productFilters {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.selectInput { appearance: none; background: #fff; }
+
+.productForm { display: grid; gap: 12px; }
+.productFormGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+.productFormActions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 4px; }
+.inputSelectWrap { position: relative; }
+.inputSelect { padding-right: 32px; }
+.inputSelectIcon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6b7280;
+  pointer-events: none;
+}
+
+.productNote { margin-top: 10px; }
+.pillStatus {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+}
+.pillDanger { background: #d9202f; color: #fff; }
+.pillWarn { background: #f7c948; color: #7a4d00; }
+.stockMin { font-weight: 700; color: #1f2937; }
+
+.productCard .table { margin-top: 6px; border-radius: 14px; overflow: hidden; }
+.productCard .tableWrap {
+  border: 1px solid #e6eaf0;
+  border-radius: 14px;
+  overflow: hidden;
+}
+.productCard .table th { background: #f3f5f9; }
+.productCard .table tr { transition: background 0.12s ease; }
+.productCard .table tr:hover { background: #f9fafb; }
+.btnTablePrimary {
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid #2f5da4;
+  background: #3d73c3;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+.btnTableGhost {
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid #e3e6ed;
+  background: #fff;
+  color: #d9202f;
+  font-weight: 700;
+  cursor: pointer;
+}

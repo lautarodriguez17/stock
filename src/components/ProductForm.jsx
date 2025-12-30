@@ -11,7 +11,7 @@ const empty = {
   minStock: ""
 };
 
-export default function ProductForm({ initialValue, onSubmit, onCancel, errors }) {
+export default function ProductForm({ initialValue, onSubmit, onCancel, errors, categoryOptions = [] }) {
   const [form, setForm] = useState(empty);
 
   useEffect(() => {
@@ -37,8 +37,8 @@ export default function ProductForm({ initialValue, onSubmit, onCancel, errors }
   }
 
   return (
-    <form className="form" onSubmit={submit}>
-      <div className="grid2">
+    <form className="productForm" onSubmit={submit}>
+      <div className="productFormGrid">
         <Field label="Nombre">
           <input
             className="input"
@@ -48,7 +48,7 @@ export default function ProductForm({ initialValue, onSubmit, onCancel, errors }
           />
         </Field>
 
-        <Field label="SKU/Código">
+        <Field label="SKU / Código">
           <input
             className="input"
             value={form.sku}
@@ -58,14 +58,21 @@ export default function ProductForm({ initialValue, onSubmit, onCancel, errors }
         </Field>
       </div>
 
-      <div className="grid2">
+      <div className="productFormGrid">
         <Field label="Categoría">
-          <input
-            className="input"
-            value={form.category}
-            onChange={(e) => setForm((f) => ({ ...f, category: e.target.value }))}
-            placeholder="Ej: Bebidas"
-          />
+          <div className="inputSelectWrap">
+            <input
+              className="input inputSelect"
+              list="categoryOptions"
+              value={form.category}
+              onChange={(e) => setForm((f) => ({ ...f, category: e.target.value }))}
+              placeholder="Seleccionar"
+            />
+            <span className="inputSelectIcon" aria-hidden="true">▾</span>
+            <datalist id="categoryOptions">
+              {categoryOptions.map((c) => <option key={c} value={c} />)}
+            </datalist>
+          </div>
         </Field>
 
         <Field label="Stock mínimo">
@@ -75,11 +82,12 @@ export default function ProductForm({ initialValue, onSubmit, onCancel, errors }
             min="0"
             value={form.minStock}
             onChange={(e) => setForm((f) => ({ ...f, minStock: e.target.value }))}
+            placeholder="Ej: 10"
           />
         </Field>
       </div>
 
-      <div className="grid2">
+      <div className="productFormGrid">
         <Field label="Costo">
           <input
             className="input"
@@ -112,13 +120,13 @@ export default function ProductForm({ initialValue, onSubmit, onCancel, errors }
         </div>
       ) : null}
 
-      <div className="row">
-        <button className="btnPrimary" type="submit">
-          {form.id ? "Guardar cambios" : "Agregar producto"}
+      <div className="productFormActions">
+        <button className="btnSuccess" type="submit">
+          {form.id ? "Guardar cambios" : "Agregar Producto"}
         </button>
 
         {onCancel ? (
-          <button className="btn" type="button" onClick={onCancel}>
+          <button className="btnGhost" type="button" onClick={onCancel}>
             Cancelar
           </button>
         ) : null}
