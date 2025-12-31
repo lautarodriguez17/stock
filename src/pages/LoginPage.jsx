@@ -20,39 +20,54 @@ export default function LoginPage() {
 
   return (
     <div className="loginPage">
-      <form className="loginCard" onSubmit={submit}>
-        <div className="loginHeader">
-          <h2 className="loginTitle">Iniciar sesion</h2>
-          <p className="loginSubtitle">Acceso al sistema de stock</p>
+      <div className="loginShell">
+        <div className="loginLogoWrap">
+          <img className="loginLogo" src="/logo.png" alt="Kiosco Stock" />
         </div>
+        <form className="loginCard" onSubmit={submit}>
+          <div className="loginHeader">
+            <h2 className="loginTitle">Iniciar sesion</h2>
+            <p className="loginSubtitle">Acceso al sistema de stock</p>
+          </div>
 
-        <Field label="Usuario">
-          <input
-            className="input"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            placeholder="Usuario"
-            autoComplete="username"
-          />
-        </Field>
+          <div className="loginField">
+            <label className="loginLabel" htmlFor="loginUser">Usuario</label>
+            <div className="loginInputWrap">
+              <span className="loginIcon" aria-hidden="true">👤</span>
+              <input
+                id="loginUser"
+                className="input loginInput"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="Usuario"
+                autoComplete="username"
+              />
+            </div>
+          </div>
 
-        <Field label="Password">
-          <input
-            className="input"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Password"
-            autoComplete="current-password"
-          />
-        </Field>
+          <div className="loginField">
+            <label className="loginLabel" htmlFor="loginPassword">Password</label>
+            <div className="loginInputWrap">
+              <span className="loginIcon" aria-hidden="true">🔒</span>
+              <input
+                id="loginPassword"
+                className="input loginInput"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Password"
+                autoComplete="current-password"
+              />
+            </div>
+          </div>
 
-        {error ? <div className="errorBox">{error}</div> : null}
+          {error ? <div className="errorBox">{error}</div> : null}
 
-        <button className="btnPrimary loginButton" type="submit">
-          Ingresar
-        </button>
-      </form>
+          <button className="btnPrimary loginButton" type="submit">
+            Ingresar
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

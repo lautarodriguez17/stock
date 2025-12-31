@@ -437,23 +437,72 @@
   display: grid;
   place-items: center;
   padding: 24px;
-  background: #f4f5f8;
+  background: radial-gradient(circle at top, #f7f9ff 0%, #eef2ff 45%, #f6f7fb 100%);
+}
+.loginShell {
+  position: relative;
+  width: min(92vw, 420px);
+  display: grid;
+  place-items: center;
+  padding-top: 90px;
+}
+.loginLogoWrap {
+  position: absolute;
+  top: -70px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
 }
 .loginCard {
   width: 100%;
-  max-width: 420px;
   background: #fff;
   border: 1px solid #e5e7eb;
-  border-radius: 18px;
-  padding: 24px;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
+  border-radius: 22px;
+  padding: 92px 26px 24px;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.14);
   display: grid;
   gap: 12px;
 }
-.loginHeader { display: grid; gap: 4px; }
-.loginTitle { margin: 0; font-size: 20px; font-weight: 800; color: #111827; }
+.loginLogo {
+  width: 305px;
+  height: 305px;
+  object-fit: contain;
+  filter: drop-shadow(0 18px 30px rgba(15, 23, 42, 0.25));
+}
+.loginHeader { display: grid; gap: 4px; text-align: left; }
+.loginTitle { margin: 0; font-size: 20px; font-weight: 800; color: #0f172a; }
 .loginSubtitle { margin: 0; color: #6b7280; font-size: 13px; }
-.loginButton { width: 100%; }
+.loginField { display: grid; gap: 6px; }
+.loginLabel { font-size: 12px; color: #475569; font-weight: 700; }
+.loginInputWrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #d6dbe5;
+  border-radius: 12px;
+  padding: 8px 12px;
+  background: #f8fafc;
+}
+.loginIcon { font-size: 16px; color: #64748b; }
+.loginInput {
+  border: none;
+  background: transparent;
+  padding: 6px 0;
+}
+.loginInput:focus { outline: none; box-shadow: none; }
+.loginInputWrap:focus-within {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.18);
+}
+.loginButton {
+  width: 100%;
+  margin-top: 6px;
+  background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%);
+  border-color: #1d4ed8;
+  box-shadow: 0 10px 18px rgba(37, 99, 235, 0.28);
+}
+.loginButton:hover { transform: translateY(-1px); }
+.loginCard .errorBox { margin-top: 4px; }
 
 /* Conteo */
 .countPage { display: flex; flex-direction: column; gap: 16px; }
