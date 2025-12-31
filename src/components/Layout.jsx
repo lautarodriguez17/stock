@@ -11,7 +11,7 @@ export default function Layout({ children }) {
     <div className="container">
       <header className="header">
         <div className="brand">
-          <div className="brandIcon" aria-hidden="true">🛍️</div>
+          <img className="brandIcon" src="/logo.png" alt="" aria-hidden="true" />
           <div>
             <h1 className="title">Kiosco Stock</h1>
             <p className="subtitle">Panel diario y gestión de stock</p>
@@ -49,3 +49,4 @@ export default function Layout({ children }) {
     </div>
   );
 }
+
