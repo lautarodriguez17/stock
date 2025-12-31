@@ -34,7 +34,7 @@ export default function Layout({ children }) {
               Estado: <strong>{needsAttention ? "Atención requerida" : "Todo en orden"}</strong>
             </span>
           </div>
-            <button className="btnGhost" type="button" onClick={logout}>
+          <button className="btnGhost logoutButton" type="button" onClick={logout}>
             Cerrar sesion
           </button>
        

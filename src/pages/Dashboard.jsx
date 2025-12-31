@@ -60,9 +60,6 @@ export default function Dashboard({ onGoToProducts, onGoToMovements }) {
                   </div>
 
                   <div className="criticalActions">
-                    {canCreatePurchase ? (
-                      <button className="btnCTA" type="button">+ Registrar compra</button>
-                    ) : null}
                     <button className="btnGhost" type="button">Ver producto</button>
                   </div>
                 </div>

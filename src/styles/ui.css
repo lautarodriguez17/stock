@@ -260,6 +260,15 @@
   font-weight: 700;
   cursor: pointer;
 }
+.logoutButton {
+  transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.logoutButton:hover {
+  border-color: #f3b4b4;
+  background: rgba(220, 38, 38, 0.12);
+  color: #b91c1c;
+  box-shadow: 0 10px 22px rgba(220, 38, 38, 0.18);
+}
 .criticalEmpty { color: #1f2937; font-weight: 600; }
 .criticalList { display: grid; gap: 12px; width: 100%; }
 .criticalRow {
