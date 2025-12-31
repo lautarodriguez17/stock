@@ -11,8 +11,16 @@ const empty = {
   minStock: ""
 };
 
-export default function ProductForm({ initialValue, onSubmit, onCancel, errors, categoryOptions = [] }) {
+export default function ProductForm({
+  initialValue,
+  onSubmit,
+  onCancel,
+  errors,
+  categoryOptions = [],
+  canCreate = true
+}) {
   const [form, setForm] = useState(empty);
+  const canSubmit = form.id ? true : canCreate;
 
   useEffect(() => {
     if (initialValue) {
@@ -121,9 +129,11 @@ export default function ProductForm({ initialValue, onSubmit, onCancel, errors, 
       ) : null}
 
       <div className="productFormActions">
-        <button className="btnSuccess" type="submit">
-          {form.id ? "Guardar cambios" : "Agregar Producto"}
-        </button>
+        {canSubmit ? (
+          <button className="btnSuccess" type="submit">
+            {form.id ? "Guardar cambios" : "Agregar Producto"}
+          </button>
+        ) : null}
 
         {onCancel ? (
           <button className="btnGhost" type="button" onClick={onCancel}>

@@ -2,10 +2,13 @@ import React, { useMemo } from "react";
 import { useStockContext } from "../state/StockContext.jsx";
 import { useStock } from "../hooks/useStock.js";
 import { MovementType } from "../domain/types.js";
+import { can, PermissionAction } from "../domain/permissions.js";
 
 export default function Dashboard({ onGoToProducts, onGoToMovements }) {
-  const { state } = useStockContext();
+  const { state, role } = useStockContext();
   const { stockById, metrics } = useStock();
+  const canCreateProduct = can(role, PermissionAction.PRODUCT_CREATE);
+  const canCreatePurchase = can(role, PermissionAction.MOVEMENT_CREATE_IN);
 
   const lowProducts = state.products
     .filter((p) => p.active !== false)
@@ -57,7 +60,9 @@ export default function Dashboard({ onGoToProducts, onGoToMovements }) {
                   </div>
 
                   <div className="criticalActions">
-                    <button className="btnCTA" type="button">+ Registrar compra</button>
+                    {canCreatePurchase ? (
+                      <button className="btnCTA" type="button">+ Registrar compra</button>
+                    ) : null}
                     <button className="btnGhost" type="button">Ver producto</button>
                   </div>
                 </div>
@@ -126,16 +131,20 @@ export default function Dashboard({ onGoToProducts, onGoToMovements }) {
       <section className="quickActionsCard">
         <h3 className="infoTitle">Acciones Rápidas</h3>
         <div className="quickButtons">
-          <button className="quickButton green" type="button" onClick={onGoToProducts}>
-            + Agregar producto
-          </button>
-          <button
-            className="quickButton red"
-            type="button"
-            onClick={() => onGoToMovements?.(MovementType.IN)}
-          >
-            + Registrar compra
-          </button>
+          {canCreateProduct ? (
+            <button className="quickButton green" type="button" onClick={onGoToProducts}>
+              + Agregar producto
+            </button>
+          ) : null}
+          {canCreatePurchase ? (
+            <button
+              className="quickButton red"
+              type="button"
+              onClick={() => onGoToMovements?.(MovementType.IN)}
+            >
+              + Registrar compra
+            </button>
+          ) : null}
           <button
             className="quickButton blue"
             type="button"

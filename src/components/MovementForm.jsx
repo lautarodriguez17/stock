@@ -1,16 +1,43 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Field from "./Field.jsx";
 import { MovementType } from "../domain/types.js";
 
-export default function MovementForm({ products, stockById, onSubmit, errors, defaultType }) {
+const TYPE_OPTIONS = [
+  { value: MovementType.OUT, label: "Salida (venta)" },
+  { value: MovementType.IN, label: "Entrada (compra)" },
+  { value: MovementType.ADJUST, label: "Ajuste (set stock)" }
+];
+const DEFAULT_ALLOWED_TYPES = TYPE_OPTIONS.map((option) => option.value);
+
+export default function MovementForm({
+  products,
+  stockById,
+  onSubmit,
+  errors,
+  defaultType,
+  allowedTypes
+}) {
   const activeProducts = useMemo(() => products.filter((p) => p.active !== false), [products]);
+  const resolvedAllowedTypes =
+    Array.isArray(allowedTypes) && allowedTypes.length ? allowedTypes : DEFAULT_ALLOWED_TYPES;
+  const visibleTypeOptions = TYPE_OPTIONS.filter((option) =>
+    resolvedAllowedTypes.includes(option.value)
+  );
 
   const [productId, setProductId] = useState(activeProducts[0]?.id || "");
-  const [type, setType] = useState(defaultType ?? MovementType.OUT);
+  const [type, setType] = useState(() =>
+    resolveInitialType(defaultType, resolvedAllowedTypes)
+  );
   const [qty, setQty] = useState(1);
   const [note, setNote] = useState("");
 
   const selectedStock = productId ? stockById[productId] ?? 0 : 0;
+
+  useEffect(() => {
+    if (!resolvedAllowedTypes.includes(type)) {
+      setType(resolveInitialType(defaultType, resolvedAllowedTypes));
+    }
+  }, [defaultType, resolvedAllowedTypes, type]);
 
   function submit(e) {
     e.preventDefault();
@@ -36,9 +63,11 @@ export default function MovementForm({ products, stockById, onSubmit, errors, de
       <div className="grid2">
         <Field label="Tipo">
           <select className="input" value={type} onChange={(e) => setType(e.target.value)}>
-            <option value={MovementType.OUT}>Salida (venta)</option>
-            <option value={MovementType.IN}>Entrada (compra)</option>
-            <option value={MovementType.ADJUST}>Ajuste (set stock)</option>
+            {visibleTypeOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
           </select>
         </Field>
 
@@ -71,4 +100,9 @@ export default function MovementForm({ products, stockById, onSubmit, errors, de
       <button className="btnPrimary" type="submit">Registrar movimiento</button>
     </form>
   );
+}
+
+function resolveInitialType(defaultType, allowedTypes) {
+  if (defaultType && allowedTypes.includes(defaultType)) return defaultType;
+  return allowedTypes[0] ?? MovementType.OUT;
 }

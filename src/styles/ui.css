@@ -15,7 +15,10 @@
 .title { margin: 0; font-size: 24px; font-weight: 800; color: #1f2937; }
 .subtitle { margin: 2px 0 0; color: #6b7280; font-size: 14px; }
 
-.headerActions { display: flex; align-items: center; gap: 10px; }
+.headerActions { display: flex; align-items: center; gap: 30px; }
+.userBadge { display: grid; gap: 2px; }
+.userLabel { font-size: 12px; color: #6b7280; font-weight: 700; }
+.userValue { font-size: 14px; font-weight: 800; color: #1f2937; }
 .statusPill {
   display: inline-flex;
   align-items: center;
@@ -411,3 +414,27 @@
   font-weight: 700;
   cursor: pointer;
 }
+
+/* Login */
+.loginPage {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: #f4f5f8;
+}
+.loginCard {
+  width: 100%;
+  max-width: 420px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  padding: 24px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
+  display: grid;
+  gap: 12px;
+}
+.loginHeader { display: grid; gap: 4px; }
+.loginTitle { margin: 0; font-size: 20px; font-weight: 800; color: #111827; }
+.loginSubtitle { margin: 0; color: #6b7280; font-size: 13px; }
+.loginButton { width: 100%; }

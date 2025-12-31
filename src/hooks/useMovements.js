@@ -4,14 +4,28 @@ import { ActionType } from "../state/actions.js";
 import { validateMovement } from "../domain/validations.js";
 import { computeStock } from "../domain/stock.js";
 import { MovementType } from "../domain/types.js";
+import { can, PermissionAction } from "../domain/permissions.js";
 
 const uid = () => (crypto?.randomUUID?.() ? crypto.randomUUID() : String(Date.now() + Math.random()));
 
 export function useMovements() {
-  const { state, dispatch } = useStockContext();
+  const { state, dispatch, role } = useStockContext();
   const [errorList, setErrorList] = useState([]);
 
   function addMovement(input) {
+    const permissionByType = {
+      [MovementType.IN]: PermissionAction.MOVEMENT_CREATE_IN,
+      [MovementType.OUT]: PermissionAction.MOVEMENT_CREATE_OUT,
+      [MovementType.ADJUST]: PermissionAction.MOVEMENT_CREATE_ADJUST
+    };
+    const requiredPermission = permissionByType[input.type];
+    if (requiredPermission && !can(role, requiredPermission)) {
+      const errors = ["No tienes permiso para registrar este movimiento."];
+      setErrorList(errors);
+      alert(errors[0]);
+      return false;
+    }
+
     const movement = {
       id: uid(),
       productId: input.productId,

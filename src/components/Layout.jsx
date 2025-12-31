@@ -1,8 +1,10 @@
 import React from "react";
 import { useStock } from "../hooks/useStock.js";
+import { useStockContext } from "../state/StockContext.jsx";
 
 export default function Layout({ children }) {
   const { metrics } = useStock();
+  const { auth, logout } = useStockContext();
   const needsAttention = metrics.lowStockCount > 0;
 
   return (
@@ -17,6 +19,13 @@ export default function Layout({ children }) {
         </div>
 
         <div className="headerActions">
+          {auth ? (
+            <div className="userBadge">
+              <span className="userLabel">Usuario</span>
+              <span className="userValue">{auth.username} · {auth.role}</span>
+            </div>
+          ) : null}
+        
           <div className={`statusPill ${needsAttention ? "statusWarning" : "statusOk"}`}>
             <span className="statusEmoji" aria-hidden="true">
               {needsAttention ? "⚠️" : "✅"}
@@ -25,9 +34,10 @@ export default function Layout({ children }) {
               Estado: <strong>{needsAttention ? "Atención requerida" : "Todo en orden"}</strong>
             </span>
           </div>
-          <button className="iconButton" type="button" aria-label="Más opciones">
-            ⋮
+            <button className="btnGhost" type="button" onClick={logout}>
+            Cerrar sesion
           </button>
+       
         </div>
       </header>
 

@@ -3,10 +3,14 @@ import ProductForm from "../components/ProductForm.jsx";
 import ProductTable from "../components/ProductTable.jsx";
 import { useProducts } from "../hooks/useProducts.js";
 import { useStock } from "../hooks/useStock.js";
+import { useStockContext } from "../state/StockContext.jsx";
+import { can, PermissionAction } from "../domain/permissions.js";
 
 export default function ProductsPage() {
   const { products, allProducts, upsertProduct, deactivateProduct, errorList } = useProducts();
   const { stockById } = useStock();
+  const { role } = useStockContext();
+  const canCreateProduct = can(role, PermissionAction.PRODUCT_CREATE);
 
   const [editing, setEditing] = useState(null);
   const [q, setQ] = useState("");
@@ -48,6 +52,7 @@ export default function ProductsPage() {
           initialValue={editing}
           categoryOptions={categories.filter((c) => c !== "ALL")}
           errors={errorList}
+          canCreate={canCreateProduct}
           onSubmit={(data) => {
             const ok = upsertProduct(data);
             if (ok) setEditing(null);
