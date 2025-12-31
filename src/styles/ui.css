@@ -171,6 +171,13 @@
   padding: 10px 12px;
   color: #6b0000;
 }
+.successBox {
+  border: 1px solid #b8e6bf;
+  background: #f1fbf3;
+  border-radius: 12px;
+  padding: 10px 12px;
+  color: #1f6b2b;
+}
 .badgeLow {
   display: inline-block;
   margin-left: 8px;
@@ -457,3 +464,8 @@
 .diffNegative { color: #b91c1c; }
 .diffZero { color: #6b7280; }
 .rowAdjust { background: #fff7ed; }
+
+/* Backup */
+.backupPage { display: flex; flex-direction: column; gap: 16px; }
+.backupActions { flex-wrap: wrap; }
+.backupMode { margin: 10px 0; }

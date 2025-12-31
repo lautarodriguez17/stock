@@ -7,7 +7,8 @@ import ProductsPage from "./pages/ProductsPage.jsx";
 import MovementsPage from "./pages/MovementsPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import InventoryCountPage from "./pages/InventoryCountPage.jsx";
-import { can, PermissionAction } from "./domain/permissions.js";
+import BackupPage from "./pages/BackupPage.jsx";
+import { can, PermissionAction, Roles } from "./domain/permissions.js";
 
 export default function App() {
   return (
@@ -31,6 +32,9 @@ function AppContent() {
       ];
       if (can(role, PermissionAction.MOVEMENT_CREATE_ADJUST)) {
         items.push({ key: "count", label: "Conteo" });
+      }
+      if (role === Roles.ADMIN) {
+        items.push({ key: "backup", label: "Backup" });
       }
       return items;
     },
@@ -65,6 +69,7 @@ function AppContent() {
       {tab === "products" && <ProductsPage />}
       {tab === "movements" && <MovementsPage defaultType={movementTypePreset} />}
       {tab === "count" && <InventoryCountPage />}
+      {tab === "backup" && <BackupPage />}
     </Layout>
   );
 }
