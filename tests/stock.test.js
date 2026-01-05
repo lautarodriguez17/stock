@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import { computeStock } from "../src/domain/stock.js";
 import { MovementType } from "../src/domain/types.js";
 
+
 describe("computeStock", () => {
   it("calcula IN/OUT correctamente", () => {
     const products = [{ id: "p1" }, { id: "p2" }];
