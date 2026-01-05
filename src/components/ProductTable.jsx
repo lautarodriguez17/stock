@@ -1,7 +1,9 @@
 import React, { useMemo } from "react";
+import useMediaQuery from "../hooks/useMediaQuery.js";
 import Table from "./Table.jsx";
 
 export default function ProductTable({ products, stockById, onEdit, onDeactivate }) {
+  const isMobile = useMediaQuery("(max-width: 768px)");
   const rows = useMemo(() => {
     return products.map((p) => {
       const stock = stockById[p.id] ?? 0;
@@ -61,7 +63,61 @@ export default function ProductTable({ products, stockById, onEdit, onDeactivate
     }
   ];
 
-  return <Table columns={columns} rows={rows} emptyText="No hay productos." />;
+  if (!isMobile) {
+    return <Table columns={columns} rows={rows} emptyText="No hay productos." />;
+  }
+
+  return (
+    <div className="mobileCardList">
+      {rows.length === 0 ? (
+        <div className="tableEmpty">No hay productos.</div>
+      ) : (
+        rows.map((r) => (
+          <article className="mobileCard" key={r.id || r.sku || r.name}>
+            <div className="mobileCardHeader">
+              <div>
+                <p className="mobileCardTitle">{r.name}</p>
+                <p className="mobileMuted">{r.sku || "Sin SKU"}</p>
+              </div>
+              {r.status === "OK" ? null : (
+                <span className={`pillStatus ${r.status === "Bajo" ? "pillDanger" : "pillWarn"}`}>
+                  {r.status}
+                </span>
+              )}
+            </div>
+
+            <div className="mobileCardRow">
+              <span className="mobileLabel">Categoria</span>
+              <span>{r.category || "Sin categoria"}</span>
+            </div>
+
+            <div className="mobileCardGrid">
+              <div>
+                <span className="mobileLabel">Costo</span>
+                <div className="mobileValue">{formatMoney(r.cost)}</div>
+              </div>
+              <div>
+                <span className="mobileLabel">Precio</span>
+                <div className="mobileValue">{formatMoney(r.price)}</div>
+              </div>
+            </div>
+
+            <div className="mobileCardRow">
+              <span className="mobileLabel">Stock / Min</span>
+              <span className="mobileValue">{r.stock} / {r.minStock ?? 0}</span>
+            </div>
+
+            <div className="mobileCardActions">
+              <button className="btnPrimary" type="button" onClick={() => onEdit(r)}>Editar</button>
+              <button className="btnGhost" type="button" onClick={() => onDeactivate(r.id)}>
+                Desactivar
+              </button>
+            </div>
+          </article>
+        ))
+      )}
+    </div>
+  );
 }
 
 function formatMoney(n) {

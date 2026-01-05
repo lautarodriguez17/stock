@@ -42,6 +42,9 @@
   cursor: pointer;
 }
 
+.desktopOnly { display: block; }
+.mobileOnly { display: none; }
+
 .main { display: flex; flex-direction: column; gap: 18px; }
 .footer { margin-top: 20px; color: #6b7280; font-size: 12px; }
 
@@ -66,6 +69,61 @@
 }
 .tab:hover { color: #1f2937; }
 .tabActive { background: #c7212b; color: #fff; box-shadow: 0 10px 26px rgba(199, 33, 43, 0.25); }
+.mobileNav {
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 6px;
+}
+.mobileNavToggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid #d7dbe2;
+  background: #fff;
+  cursor: pointer;
+}
+.mobileNavIcon {
+  display: grid;
+  gap: 3px;
+}
+.mobileNavIcon span {
+  width: 20px;
+  height: 2px;
+  border-radius: 999px;
+  background: #1f2937;
+  display: block;
+}
+.mobileNavLabel { font-size: 14px; font-weight: 700; color: #374151; }
+.mobileNavList {
+  display: grid;
+  gap: 8px;
+  padding: 8px;
+  border-radius: 14px;
+  border: 1px solid #e6e8ef;
+  background: #f8f9fb;
+  width: 100%;
+}
+.mobileNavItem {
+  text-align: left;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  background: #fff;
+  color: #4b5563;
+  font-weight: 700;
+  cursor: pointer;
+}
+.mobileNavItem.isActive {
+  background: #c7212b;
+  color: #fff;
+  border-color: #c7212b;
+  box-shadow: 0 8px 18px rgba(199, 33, 43, 0.2);
+}
 
 .card {
   background: #fff;
@@ -163,6 +221,45 @@
 }
 .tableEmpty { color: #6b7280; padding: 16px; }
 .rowLow { background: #fff4f4; }
+
+.mobileCardList { display: grid; gap: 12px; }
+.mobileCard {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 14px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.04);
+}
+.mobileCardHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.mobileCardTitle {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 800;
+  color: #111827;
+}
+.mobileMuted { margin: 2px 0 0; color: #6b7280; font-size: 13px; }
+.mobileCardRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 6px 0;
+  border-bottom: 1px solid #f1f2f5;
+}
+.mobileCardRow:last-child { border-bottom: none; }
+.mobileCardGrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.mobileLabel { display: block; color: #6b7280; font-size: 12px; font-weight: 700; }
+.mobileValue { font-size: 15px; font-weight: 800; color: #111827; }
+.mobileCardActions { display: grid; gap: 8px; margin-top: 8px; }
+.mobileInlineField .fieldLabel { color: #4b5563; }
+.mobileInlineField .input { padding: 12px; }
 
 .errorBox {
   border: 1px solid #ffb3b3;
@@ -401,6 +498,7 @@
 }
 .pillDanger { background: #d9202f; color: #fff; }
 .pillWarn { background: #f7c948; color: #7a4d00; }
+.pillSuccess { background: #d1fae5; color: #065f46; border: 1px solid #bbf7d0; }
 .stockMin { font-weight: 700; color: #1f2937; }
 
 .productCard .table { margin-top: 6px; border-radius: 14px; overflow: hidden; }
@@ -526,6 +624,44 @@
 .printArea { display: none; }
 .printTitle { margin: 0 0 4px; font-size: 20px; font-weight: 800; color: #111827; }
 .printDate { margin: 0 0 12px; }
+
+@media (max-width: 768px) {
+  .container { padding: 16px 14px; }
+  .header { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .brand { width: 100%; justify-content: space-between; }
+  .brandIcon { width: 40px; height: 40px; }
+  .title { font-size: 20px; }
+  .subtitle { font-size: 13px; }
+  .headerActions { width: 100%; flex-direction: column; align-items: stretch; gap: 10px; }
+  .statusPill { width: 100%; justify-content: space-between; }
+  .logoutButton { width: 100%; }
+  .main { gap: 14px; }
+
+  .tabs { display: none; }
+  .mobileNav { display: flex; }
+  .cardHeader { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .actions { width: 100%; flex-direction: column; }
+  .btn, .btnPrimary, .btnDanger, .btnGhost, .btnSuccess { width: 100%; }
+  .productFilters { width: 100%; flex-direction: column; align-items: stretch; }
+  .productCardHeader { align-items: flex-start; }
+  .productFormActions { width: 100%; flex-direction: column; align-items: stretch; }
+  .mobileCardGrid { grid-template-columns: 1fr; }
+
+  .quickButtons { grid-template-columns: 1fr; }
+  .alertBody { flex-direction: column; }
+  .criticalRow { flex-direction: column; align-items: flex-start; }
+  .stockRow { flex-wrap: wrap; gap: 10px; }
+  .infoColumns { flex-direction: column; gap: 12px; }
+  .countFilters, .backupActions { flex-direction: column; align-items: stretch; gap: 10px; }
+
+  .loginShell { width: 100%; padding-top: 70px; }
+  .loginLogo { width: 200px; height: 200px; }
+  .loginCard { padding: 78px 18px 20px; }
+
+  .mobileOnly { display: block; width: 100%; }
+  .mobileOnly.mobileCardList { display: grid; }
+  .desktopOnly { display: none !important; }
+}
 
 @media print {
   body[data-printing="restock"] * { visibility: hidden; }

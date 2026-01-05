@@ -4,6 +4,7 @@ import Field from "../components/Field.jsx";
 import Table from "../components/Table.jsx";
 import { useStockContext } from "../state/StockContext.jsx";
 import { useStock } from "../hooks/useStock.js";
+import useMediaQuery from "../hooks/useMediaQuery.js";
 import { ActionType } from "../state/actions.js";
 import { Roles } from "../domain/permissions.js";
 
@@ -15,11 +16,16 @@ export default function BackupPage() {
   const [file, setFile] = useState(null);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   const productSkuById = useMemo(
     () => Object.fromEntries(state.products.map((p) => [p.id, p.sku || ""])),
     [state.products]
   );
+  const summaryRows = [
+    { id: "products", label: "Productos", value: state.products.length },
+    { id: "movements", label: "Movimientos", value: state.movements.length }
+  ];
 
   function exportJson() {
     setError("");
@@ -176,17 +182,27 @@ export default function BackupPage() {
       </Card>
 
       <Card title="Vista rapida">
-        <Table
-          columns={[
-            { key: "label", header: "Dato" },
-            { key: "value", header: "Cantidad" }
-          ]}
-          rows={[
-            { id: "products", label: "Productos", value: state.products.length },
-            { id: "movements", label: "Movimientos", value: state.movements.length }
-          ]}
-          emptyText="Sin datos."
-        />
+        {!isMobile ? (
+          <Table
+            columns={[
+              { key: "label", header: "Dato" },
+              { key: "value", header: "Cantidad" }
+            ]}
+            rows={summaryRows}
+            emptyText="Sin datos."
+          />
+        ) : (
+          <div className="mobileCardList">
+            {summaryRows.map((row) => (
+              <article className="mobileCard" key={row.id}>
+                <div className="mobileCardRow">
+                  <span className="mobileLabel">{row.label}</span>
+                  <span className="mobileValue">{row.value}</span>
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
       </Card>
     </div>
   );

@@ -4,6 +4,7 @@ import Table from "../components/Table.jsx";
 import { useStockContext } from "../state/StockContext.jsx";
 import { useStock } from "../hooks/useStock.js";
 import { useMovements } from "../hooks/useMovements.js";
+import useMediaQuery from "../hooks/useMediaQuery.js";
 import { MovementType } from "../domain/types.js";
 import { can, PermissionAction } from "../domain/permissions.js";
 
@@ -12,6 +13,7 @@ export default function InventoryCountPage() {
   const { stockById } = useStock();
   const { addMovement } = useMovements();
   const inputRefs = useRef([]);
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   const [countById, setCountById] = useState({});
   const [onlyActive, setOnlyActive] = useState(true);
@@ -211,13 +213,53 @@ export default function InventoryCountPage() {
           </select>
         </div>
 
-        <Table
-          columns={columns}
-          rows={rows.map((row) => ({ ...row, _rowClass: row.rowClass }))}
-          emptyText="No hay productos para contar."
-          maxHeight="520px"
-          scrollThreshold={8}
-        />
+        {!isMobile ? (
+          <Table
+            columns={columns}
+            rows={rows.map((row) => ({ ...row, _rowClass: row.rowClass }))}
+            emptyText="No hay productos para contar."
+            maxHeight="520px"
+            scrollThreshold={8}
+          />
+        ) : (
+          <div className="mobileCardList">
+            {rows.length === 0 ? (
+              <div className="tableEmpty">No hay productos para contar.</div>
+            ) : (
+              rows.map((row) => (
+                <article className="mobileCard" key={row.id}>
+                  <div className="mobileCardHeader">
+                    <h4 className="mobileCardTitle">{row.name}</h4>
+                    <span className={`pill ${row.diffClass}`}>{row.diffLabel}</span>
+                  </div>
+
+                  <div className="mobileCardRow">
+                    <span className="mobileLabel">Stock actual</span>
+                    <span className="mobileValue">{row.stockActual}</span>
+                  </div>
+
+                  <label className="field mobileInlineField">
+                    <span className="fieldLabel">Stock real</span>
+                    <input
+                      ref={(el) => {
+                        inputRefs.current[row.index] = el;
+                      }}
+                      className="input"
+                      type="number"
+                      min="0"
+                      step="1"
+                      inputMode="numeric"
+                      value={countById[row.id] ?? ""}
+                      onChange={(e) => handleCountChange(row.id, e.target.value)}
+                      onKeyDown={(e) => handleKeyDown(e, row.index)}
+                      autoFocus={row.index === 0}
+                    />
+                  </label>
+                </article>
+              ))
+            )}
+          </div>
+        )}
       </Card>
     </div>
   );

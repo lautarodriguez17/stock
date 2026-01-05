@@ -4,6 +4,7 @@ import Table from "../components/Table.jsx";
 import { useStockContext } from "../state/StockContext.jsx";
 import { useStock } from "../hooks/useStock.js";
 import { useMovements } from "../hooks/useMovements.js";
+import useMediaQuery from "../hooks/useMediaQuery.js";
 import { MovementType } from "../domain/types.js";
 import { can, PermissionAction } from "../domain/permissions.js";
 
@@ -15,6 +16,7 @@ export default function RestockPage() {
   const [qtyById, setQtyById] = useState({});
   const [completedIds, setCompletedIds] = useState({});
   const [message, setMessage] = useState("");
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   const canCreateIn = can(role, PermissionAction.MOVEMENT_CREATE_IN);
 
@@ -178,13 +180,64 @@ export default function RestockPage() {
         </p>
 
         <div className="noPrint">
-          <Table
-            columns={columns}
-            rows={rows}
-            emptyText="No hay productos con stock bajo."
-            maxHeight="520px"
-            scrollThreshold={8}
-          />
+          {!isMobile ? (
+            <Table
+              columns={columns}
+              rows={rows}
+              emptyText="No hay productos con stock bajo."
+              maxHeight="520px"
+              scrollThreshold={8}
+            />
+          ) : (
+            <div className="mobileCardList">
+              {rows.length === 0 ? (
+                <div className="tableEmpty">No hay productos con stock bajo.</div>
+              ) : (
+                rows.map((row) => (
+                  <article className="mobileCard" key={row.id}>
+                    <div className="mobileCardHeader">
+                      <h4 className="mobileCardTitle">{row.name}</h4>
+                      <span className="pill">{`Min ${row.minStock}`}</span>
+                    </div>
+
+                    <div className="mobileCardRow">
+                      <span className="mobileLabel">Stock actual</span>
+                      <span className="mobileValue">{row.stockActual}</span>
+                    </div>
+
+                    <label className="field mobileInlineField">
+                      <span className="fieldLabel">Cantidad sugerida</span>
+                      <input
+                        ref={(el) => {
+                          inputRefs.current[row.index] = el;
+                        }}
+                        className="input"
+                        type="number"
+                        min="0"
+                        step="1"
+                        inputMode="numeric"
+                        value={qtyById[row.id] ?? ""}
+                        onChange={(e) => handleQtyChange(row.id, e.target.value)}
+                        onKeyDown={(e) => handleKeyDown(e, row.index)}
+                        autoFocus={row.index === 0}
+                      />
+                    </label>
+
+                    <div className="mobileCardActions">
+                      <button
+                        className="btnSuccess"
+                        type="button"
+                        onClick={() => handleMarkPurchased(row.product)}
+                        disabled={!canCreateIn || row.actionQty <= 0}
+                      >
+                        Marcar como comprado
+                      </button>
+                    </div>
+                  </article>
+                ))
+              )}
+            </div>
+          )}
         </div>
 
         {message ? <div className="successBox noPrint">{message}</div> : null}
