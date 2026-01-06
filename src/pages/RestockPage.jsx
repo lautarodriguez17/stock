@@ -8,7 +8,7 @@ import useMediaQuery from "../hooks/useMediaQuery.js";
 import { MovementType } from "../domain/types.js";
 import { can, PermissionAction } from "../domain/permissions.js";
 
-export default function RestockPage() {
+export default function RestockPage({ focusProductId, onFocusHandled }) {
   const { state, role } = useStockContext();
   const { stockById } = useStock();
   const { addMovement } = useMovements();
@@ -16,6 +16,8 @@ export default function RestockPage() {
   const [qtyById, setQtyById] = useState({});
   const [completedIds, setCompletedIds] = useState({});
   const [message, setMessage] = useState("");
+  const [highlightId, setHighlightId] = useState(null);
+  const highlightTimer = useRef(null);
   const isMobile = useMediaQuery("(max-width: 768px)");
 
   const canCreateIn = can(role, PermissionAction.MOVEMENT_CREATE_IN);
@@ -23,7 +25,7 @@ export default function RestockPage() {
   const lowProducts = useMemo(() => {
     return state.products
       .filter((p) => p.active !== false)
-      .filter((p) => (stockById[p.id] ?? 0) < (p.minStock ?? 0))
+      .filter((p) => (stockById[p.id] ?? 0) <= (p.minStock ?? 0))
       .filter((p) => !completedIds[p.id])
       .sort((a, b) => a.name.localeCompare(b.name));
   }, [state.products, stockById, completedIds]);
@@ -53,6 +55,10 @@ export default function RestockPage() {
     return () => window.removeEventListener("afterprint", cleanup);
   }, []);
 
+  useEffect(() => () => {
+    if (highlightTimer.current) clearTimeout(highlightTimer.current);
+  }, []);
+
   const rows = useMemo(() => {
     return lowProducts.map((product, index) => {
       const stockActual = stockById[product.id] ?? 0;
@@ -68,10 +74,28 @@ export default function RestockPage() {
         suggested,
         actionQty,
         index,
-        product
+        product,
+        _rowClass: product.id === highlightId ? "rowFocus" : "",
+        _rowId: product.id ? `restock-${product.id}` : ""
       };
     });
-  }, [lowProducts, stockById, qtyById]);
+  }, [lowProducts, stockById, qtyById, highlightId]);
+
+  useEffect(() => {
+    if (!focusProductId || highlightId === focusProductId) return;
+    const row = rows.find((item) => item.id === focusProductId);
+    if (!row) return;
+    const el = document.querySelector(`.noPrint [data-row-id="restock-${focusProductId}"]`);
+    if (!el) return;
+    el.scrollIntoView({ behavior: "smooth", block: "center" });
+    setHighlightId(focusProductId);
+    if (highlightTimer.current) clearTimeout(highlightTimer.current);
+    highlightTimer.current = setTimeout(() => setHighlightId(null), 2400);
+    onFocusHandled?.();
+    setTimeout(() => {
+      inputRefs.current[row.index]?.focus();
+    }, 150);
+  }, [focusProductId, highlightId, rows, onFocusHandled]);
 
   function handleQtyChange(productId, value) {
     setQtyById((prev) => ({ ...prev, [productId]: value }));
@@ -194,7 +218,11 @@ export default function RestockPage() {
                 <div className="tableEmpty">No hay productos con stock bajo.</div>
               ) : (
                 rows.map((row) => (
-                  <article className="mobileCard" key={row.id}>
+                  <article
+                    className={`mobileCard ${row.id === highlightId ? "cardFocus" : ""}`}
+                    key={row.id}
+                    data-row-id={row._rowId || undefined}
+                  >
                     <div className="mobileCardHeader">
                       <h4 className="mobileCardTitle">{row.name}</h4>
                       <span className="pill">{`Min ${row.minStock}`}</span>

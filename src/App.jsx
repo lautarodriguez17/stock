@@ -23,6 +23,8 @@ function AppContent() {
   const { auth, role } = useStockContext();
   const [tab, setTab] = useState("dashboard");
   const [movementTypePreset, setMovementTypePreset] = useState(null);
+  const [productFocusId, setProductFocusId] = useState(null);
+  const [restockFocusId, setRestockFocusId] = useState(null);
 
   const tabs = useMemo(
     () => {
@@ -63,16 +65,39 @@ function AppContent() {
           onGoToProducts={() => {
             setTab("products");
             setMovementTypePreset(null);
+            setRestockFocusId(null);
           }}
           onGoToMovements={(type) => {
             setMovementTypePreset(type ?? null);
             setTab("movements");
           }}
+          onViewProduct={(productId) => {
+            setProductFocusId(productId);
+            setRestockFocusId(null);
+            setMovementTypePreset(null);
+            setTab("products");
+          }}
+          onRestockProduct={(productId) => {
+            setRestockFocusId(productId);
+            setProductFocusId(null);
+            setMovementTypePreset(null);
+            setTab("restock");
+          }}
         />
       )}
-      {tab === "products" && <ProductsPage />}
+      {tab === "products" && (
+        <ProductsPage
+          focusProductId={productFocusId}
+          onFocusHandled={() => setProductFocusId(null)}
+        />
+      )}
       {tab === "movements" && <MovementsPage defaultType={movementTypePreset} />}
-      {tab === "restock" && <RestockPage />}
+      {tab === "restock" && (
+        <RestockPage
+          focusProductId={restockFocusId}
+          onFocusHandled={() => setRestockFocusId(null)}
+        />
+      )}
       {tab === "count" && <InventoryCountPage />}
       {tab === "backup" && <BackupPage />}
     </Layout>

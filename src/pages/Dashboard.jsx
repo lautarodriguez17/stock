@@ -4,7 +4,7 @@ import { useStock } from "../hooks/useStock.js";
 import { MovementType } from "../domain/types.js";
 import { can, PermissionAction } from "../domain/permissions.js";
 
-export default function Dashboard({ onGoToProducts, onGoToMovements }) {
+export default function Dashboard({ onGoToProducts, onGoToMovements, onViewProduct, onRestockProduct }) {
   const { state, role } = useStockContext();
   const { stockById, metrics } = useStock();
   const canCreateProduct = can(role, PermissionAction.PRODUCT_CREATE);
@@ -60,7 +60,22 @@ export default function Dashboard({ onGoToProducts, onGoToMovements }) {
                   </div>
 
                   <div className="criticalActions">
-                    <button className="btnGhost" type="button">Ver producto</button>
+                    {canCreatePurchase ? (
+                      <button
+                        className="btnCTA"
+                        type="button"
+                        onClick={() => onRestockProduct?.(criticalProduct.id)}
+                      >
+                        Reponer ahora
+                      </button>
+                    ) : null}
+                    <button
+                      className="btnGhost"
+                      type="button"
+                      onClick={() => onViewProduct?.(criticalProduct.id)}
+                    >
+                      Ver producto
+                    </button>
                   </div>
                 </div>
               ))}
@@ -115,9 +130,9 @@ export default function Dashboard({ onGoToProducts, onGoToMovements }) {
                 <div className="infoItem">
                   Ganancia bruta: <strong className="metricValue metricGross">{money(period.data.sales)}</strong>
                 </div>
-                <div className="infoItem">
+                {/* <div className="infoItem">
                   Costos: <strong className="metricValue metricCosts">{money(period.data.costs)}</strong>
-                </div>
+                </div> */}
                
               </div>
             );

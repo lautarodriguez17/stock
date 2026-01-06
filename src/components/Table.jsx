@@ -23,7 +23,11 @@ export default function Table({ columns, rows, emptyText = "Sin datos", maxHeigh
             </tr>
           ) : (
             rows.map((r, idx) => (
-              <tr key={r.id || idx} className={r._rowClass || ""}>
+              <tr
+                key={r.id || idx}
+                className={r._rowClass || ""}
+                data-row-id={r._rowId || undefined}
+              >
                 {columns.map((c) => (
                   <td key={c.key}>{c.render ? c.render(r) : r[c.key]}</td>
                 ))}

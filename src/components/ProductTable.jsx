@@ -2,21 +2,23 @@ import React, { useMemo } from "react";
 import useMediaQuery from "../hooks/useMediaQuery.js";
 import Table from "./Table.jsx";
 
-export default function ProductTable({ products, stockById, onEdit, onDeactivate }) {
+export default function ProductTable({ products, stockById, onEdit, onDeactivate, highlightId }) {
   const isMobile = useMediaQuery("(max-width: 768px)");
   const rows = useMemo(() => {
     return products.map((p) => {
       const stock = stockById[p.id] ?? 0;
       const low = stock <= (p.minStock ?? 0);
       const status = low ? (stock === 0 ? "Bajo" : "Stock bajo") : "OK";
+      const rowId = p.id ? `product-${p.id}` : "";
       return {
         ...p,
         stock,
         status,
-        _rowClass: ""
+        _rowClass: p.id === highlightId ? "rowFocus" : "",
+        _rowId: rowId
       };
     });
-  }, [products, stockById]);
+  }, [products, stockById, highlightId]);
 
   const columns = [
     { key: "name", header: "Producto" },
@@ -73,7 +75,11 @@ export default function ProductTable({ products, stockById, onEdit, onDeactivate
         <div className="tableEmpty">No hay productos.</div>
       ) : (
         rows.map((r) => (
-          <article className="mobileCard" key={r.id || r.sku || r.name}>
+          <article
+            className={`mobileCard ${r.id === highlightId ? "cardFocus" : ""}`}
+            key={r.id || r.sku || r.name}
+            data-row-id={r._rowId || undefined}
+          >
             <div className="mobileCardHeader">
               <div>
                 <p className="mobileCardTitle">{r.name}</p>

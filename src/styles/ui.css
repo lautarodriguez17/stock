@@ -258,6 +258,15 @@
 }
 .tableEmpty { color: #6b7280; padding: 16px; }
 .rowLow { background: #fff4f4; }
+.rowFocus {
+  background: #fff7db;
+  box-shadow: inset 0 0 0 2px rgba(245, 158, 11, 0.35);
+  animation: focusPulse 2.4s ease-out;
+}
+@keyframes focusPulse {
+  0% { background: #ffefc2; }
+  100% { background: #fffaf0; }
+}
 
 .mobileCardList { display: grid; gap: 12px; }
 .mobileCard {
@@ -266,6 +275,11 @@
   border-radius: 16px;
   padding: 14px;
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.04);
+}
+.mobileCard.cardFocus {
+  border-color: #f59e0b;
+  background: #fffaf0;
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.25), 0 10px 24px rgba(0, 0, 0, 0.06);
 }
 .mobileCardHeader {
   display: flex;
