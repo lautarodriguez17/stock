@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
 import { useStockContext } from "../state/StockContext.jsx";
 import { useStock } from "../hooks/useStock.js";
+import Table from "../components/Table.jsx";
 import { MovementType } from "../domain/types.js";
 import { can, PermissionAction } from "../domain/permissions.js";
 
@@ -24,6 +25,16 @@ export default function Dashboard({ onGoToProducts, onGoToMovements, onViewProdu
     const diff = minStock - (product.stock ?? 0);
     return diff > 0 ? sum + diff : sum;
   }, 0);
+
+  const todayStats = useMemo(
+    () => computeTodayStats(state.movements, state.products),
+    [state.movements, state.products]
+  );
+
+  const recentMovements = useMemo(
+    () => buildRecentMovements(state.movements, state.products, 8),
+    [state.movements, state.products]
+  );
 
   const salesHistory = useMemo(
     () => computeSalesHistory(state.movements, state.products),
@@ -49,7 +60,7 @@ export default function Dashboard({ onGoToProducts, onGoToMovements, onViewProdu
 
         <div className="alertBody">
           {lowProducts.length ? (
-            <div className="criticalList">
+            <div className={`criticalList ${lowProducts.length > 3 ? "isScrollable" : ""}`}>
               {lowProducts.map((criticalProduct) => (
                 <div className="criticalRow" key={criticalProduct.id}>
                   <div className="productInfo">
@@ -62,6 +73,9 @@ export default function Dashboard({ onGoToProducts, onGoToMovements, onViewProdu
                     <div className="stockRow">
                       <span>Stock actual: <span className="value">{criticalProduct.stock}</span></span>
                       <span>Mínimo: <span className="value">{criticalProduct.minStock ?? 0}</span></span>
+                      <span className="missing">
+                        Faltan: <span className="value">{missingCount(criticalProduct)}</span>
+                      </span>
                     </div>
                   </div>
 
@@ -72,7 +86,7 @@ export default function Dashboard({ onGoToProducts, onGoToMovements, onViewProdu
                         type="button"
                         onClick={() => onRestockProduct?.(criticalProduct.id)}
                       >
-                        Reponer ahora
+                        Agregar a reposición
                       </button>
                     ) : null}
                     <button
@@ -91,6 +105,28 @@ export default function Dashboard({ onGoToProducts, onGoToMovements, onViewProdu
               <span role="img" aria-label="ok">✅</span> Todo en orden. No hay productos en stock crítico.
             </div>
           )}
+        </div>
+      </section>
+
+      <section className="infoCard todayCard">
+        <h3 className="infoTitle">Hoy / Turno actual</h3>
+        <div className="todayGrid">
+          <div className="todayItem isSales">
+            <span className="todayLabel">Ventas de hoy</span>
+            <span className="todayValue">{money(todayStats.sales)}</span>
+          </div>
+          <div className="todayItem">
+            <span className="todayLabel">Items vendidos</span>
+            <span className="todayValue">{formatCount(todayStats.itemsSold)}</span>
+          </div>
+          <div className="todayItem">
+            <span className="todayLabel">Movimientos hoy</span>
+            <span className="todayValue">{formatCount(todayStats.movements)}</span>
+          </div>
+          <div className="todayItem isActivity">
+            <span className="todayLabel">Última actividad</span>
+            <span className="todayValue todayValueActivity">{todayStats.lastActivity}</span>
+          </div>
         </div>
       </section>
 
@@ -260,6 +296,20 @@ export default function Dashboard({ onGoToProducts, onGoToMovements, onViewProdu
         </section>
       </div>
 
+      <section className="infoCard activityCard">
+        <div className="activityHeader">
+          <h3 className="infoTitle">Actividad reciente</h3>
+          <span className="muted">Últimos movimientos</span>
+        </div>
+        <Table
+          columns={activityColumns}
+          rows={recentMovements}
+          emptyText="Sin movimientos recientes."
+          maxHeight="260px"
+          scrollThreshold={6}
+        />
+      </section>
+
       <section>
         <h3 className="infoTitle">Historial de ventas</h3>
         <div className="summaryGrid">
@@ -315,6 +365,23 @@ export default function Dashboard({ onGoToProducts, onGoToMovements, onViewProdu
   );
 }
 
+const activityColumns = [
+  { key: "time", header: "Hora" },
+  { key: "product", header: "Producto" },
+  {
+    key: "type",
+    header: "Tipo",
+    render: (row) => (
+      <span className={`movementType movement${row.type || ""}`}>{row.type}</span>
+    )
+  },
+  {
+    key: "qty",
+    header: "Cantidad",
+    render: (row) => formatCount(row.qty)
+  }
+];
+
 function money(n) {
   return Number(n || 0).toLocaleString("es-AR", {
     style: "currency",
@@ -325,6 +392,110 @@ function money(n) {
 
 function formatCount(n) {
   return Number(n || 0).toLocaleString("es-AR");
+}
+
+function missingCount(product) {
+  const minStock = product.minStock ?? 0;
+  const diff = minStock - (product.stock ?? 0);
+  return diff > 0 ? diff : 0;
+}
+
+function computeTodayStats(movements, products) {
+  const safeMovements = Array.isArray(movements) ? movements : [];
+  const safeProducts = Array.isArray(products) ? products : [];
+  const productById = Object.fromEntries(safeProducts.map((p) => [p.id, p]));
+
+  const now = new Date();
+  const startOfDay = new Date(now);
+  startOfDay.setHours(0, 0, 0, 0);
+
+  let sales = 0;
+  let itemsSold = 0;
+  let movementsCount = 0;
+  let lastMovement = null;
+  let lastMovementAt = null;
+
+  for (const movement of safeMovements) {
+    const when = new Date(movement.atISO);
+    if (Number.isNaN(when.getTime())) continue;
+
+    if (!lastMovementAt || when > lastMovementAt) {
+      lastMovementAt = when;
+      lastMovement = movement;
+    }
+
+    if (when < startOfDay) continue;
+    movementsCount += 1;
+
+    if (movement.type === MovementType.OUT) {
+      const qty = Number(movement.qty ?? 0);
+      itemsSold += qty;
+      const product = productById[movement.productId];
+      if (product) {
+        sales += (product.price ?? 0) * qty;
+      }
+    }
+  }
+
+  return {
+    sales,
+    itemsSold,
+    movements: movementsCount,
+    lastActivity: buildLastActivityLabel(lastMovement, lastMovementAt, now)
+  };
+}
+
+function buildRecentMovements(movements, products, limit) {
+  const safeMovements = Array.isArray(movements) ? movements : [];
+  const safeProducts = Array.isArray(products) ? products : [];
+  const productById = Object.fromEntries(safeProducts.map((p) => [p.id, p]));
+  const rows = safeMovements
+    .map((movement) => {
+      const time = new Date(movement.atISO);
+      const timeValue = Number.isNaN(time.getTime()) ? null : time;
+      return {
+        ...movement,
+        _time: timeValue ? timeValue.getTime() : 0
+      };
+    })
+    .sort((a, b) => b._time - a._time)
+    .slice(0, limit)
+    .map((movement) => {
+      const time = movement._time
+        ? new Date(movement._time).toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit" })
+        : "--:--";
+      const productName = productById[movement.productId]?.name || "Producto eliminado";
+      return {
+        id: movement.id || `${movement.productId}-${movement.atISO}`,
+        time,
+        product: productName,
+        type: movement.type,
+        qty: Number(movement.qty ?? 0)
+      };
+    });
+
+  return rows;
+}
+
+function buildLastActivityLabel(movement, when, now) {
+  if (!movement || !when) return "Sin actividad";
+  const action = movement.type === MovementType.OUT
+    ? "Última venta"
+    : movement.type === MovementType.IN
+      ? "Última compra"
+      : "Último ajuste";
+  return `${action} ${formatTimeAgo(when, now)}`;
+}
+
+function formatTimeAgo(when, now) {
+  const diffMs = Math.max(0, now - when);
+  const minutes = Math.floor(diffMs / 60000);
+  if (minutes < 1) return "hace instantes";
+  if (minutes < 60) return `hace ${minutes} min`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `hace ${hours} h`;
+  const days = Math.floor(hours / 24);
+  return `hace ${days} d`;
 }
 
 function computeSalesHistory(movements, products) {

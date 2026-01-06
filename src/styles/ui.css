@@ -391,8 +391,10 @@ width: 56px;
   font-weight: 800;
   border: 1px solid #a31623;
 }
-.stockRow { display: flex; gap: 24px; color: #4b5563; font-weight: 600; }
+.stockRow { display: flex; gap: 24px; flex-wrap: wrap; color: #4b5563; font-weight: 600; }
 .stockRow .value { color: #111827; font-weight: 800; }
+.stockRow .missing { color: #b91c1c; }
+.stockRow .missing .value { color: #dc2626; }
 .criticalActions { display: flex; gap: 10px; flex-wrap: wrap; }
 .btnCTA {
   padding: 12px 18px;
@@ -424,6 +426,12 @@ width: 56px;
 }
 .criticalEmpty { color: #1f2937; font-weight: 600; }
 .criticalList { display: grid; gap: 12px; width: 100%; }
+.criticalList.isScrollable {
+  max-height: 260px;
+  overflow-y: auto;
+  padding-right: 6px;
+  scrollbar-width: thin;
+}
 .criticalRow {
   display: flex;
   align-items: center;
@@ -434,6 +442,49 @@ width: 56px;
   border-bottom: 1px solid #f0f1f5;
 }
 .criticalRow:last-child { border-bottom: none; padding-bottom: 0; }
+
+.todayCard { padding: 12px 16px; }
+.todayGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 10px 16px;
+}
+.todayItem {
+  display: grid;
+  gap: 4px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  background: #f8fafc;
+  border: 1px solid #eef0f4;
+}
+.todayLabel { font-size: 12px; font-weight: 700; color: #6b7280; }
+.todayValue { font-size: 18px; font-weight: 800; color: #111827; }
+.todayItem.isSales .todayValue { color: #1f4b8f; }
+.todayValueActivity { font-size: 14px; font-weight: 700; color: #374151; }
+
+.activityCard { padding: 12px 16px; }
+.activityHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.movementType {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  border: 1px solid #e5e7eb;
+  background: #f8fafc;
+  color: #374151;
+}
+.movementIN { background: #eef9f1; color: #1f6b2b; border-color: #cfe9d6; }
+.movementOUT { background: #fff1f2; color: #b91c1c; border-color: #fecdd3; }
+.movementADJUST { background: #fefce8; color: #92400e; border-color: #fde68a; }
 
 .summaryGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
 .infoCard {
