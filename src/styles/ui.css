@@ -2,15 +2,13 @@
 .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
 .brand { display: flex; align-items: center; gap: 12px; }
 .brandIcon {
-  width: 48px;
-  height: 48px;
-  border-radius: 16px;
-  background: linear-gradient(145deg, #fff4db, #ffd99f);
-  border: 1px solid #f2c87c;
-  display: grid;
-  place-items: center;
-  box-shadow: 0 10px 24px rgba(224, 170, 74, 0.35);
-  font-size: 22px;
+width: 56px;
+    height: 58px;
+    border-radius: 16px;
+    background: linear-gradient(145deg, #047101, #63be65);
+    /* border: 1px solid #f2c87c; */
+    display: grid;
+    place-items: center;
 }
 .title { margin: 0; font-size: 24px; font-weight: 800; color: #1f2937; }
 .subtitle { margin: 2px 0 0; color: #6b7280; font-size: 14px; }
@@ -455,6 +453,96 @@
 .infoColumns { display: flex; gap: 24px; flex-wrap: wrap; }
 .infoLabel { font-size: 13px; color: #4b5563; font-weight: 700; }
 .infoAmount { font-size: 22px; font-weight: 800; }
+
+.summaryCard { padding: 14px 16px; }
+.summaryCard .infoTitle { margin-bottom: 8px; }
+.summaryCompact {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 18px;
+  align-items: start;
+}
+.summaryColumn { display: grid; gap: 8px; }
+.summaryRow {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #374151;
+}
+.summaryLabel { min-width: 0; }
+.summaryValue { font-size: 16px; font-weight: 800; }
+.summaryIcon {
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.summaryIcon svg { width: 18px; height: 18px; }
+.summaryRow.isNeutral { color: #374151; }
+.summaryRow.isNeutral .summaryIcon { color: #9ca3af; }
+.summaryRow.isAlert { color: #b91c1c; }
+.summaryRow.isAlert .summaryValue { color: #dc2626; }
+.summaryRow.isMissing { color: #1f2937; }
+.summaryRow.isMissing .summaryValue { color: #111827; }
+
+.capitalPanel {
+  display: grid;
+  grid-template-columns: minmax(120px, 1fr) auto minmax(120px, 1fr) auto minmax(140px, 1fr);
+  gap: 8px;
+  align-items: center;
+  padding: 8px 10px;
+  border-radius: 16px;
+  border: 1px solid #e2e5ec;
+  background: linear-gradient(180deg, #ffffff 0%, #f4f6fb 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85);
+}
+.capitalItem { display: grid; gap: 4px; min-width: 0; }
+.capitalLabel { font-size: 12px; font-weight: 800; }
+.capitalValue {
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 0.1px;
+  line-height: 1.1;
+}
+.capitalValuePrimary { font-size: 22px; font-weight: 900; }
+
+.capitalItem.isInvested .capitalLabel,
+.capitalItem.isInvested .capitalValue {
+  color: #6b7280;
+}
+.capitalItem.isSales .capitalLabel { color: #3f5b96; }
+.capitalItem.isSales .capitalValue { color: #355aa0; }
+.capitalItem.isNet .capitalLabel,
+.capitalItem.isNet .capitalValue {
+  color: #2f6b3a;
+}
+
+.capitalStep {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  align-self: center;
+  padding-bottom: 2px;
+}
+.capitalArrow { color: #c7cbd4; display: inline-flex; }
+.capitalArrow svg { width: 32px; height: 10px; }
+.capitalIcon { display: inline-flex; }
+.capitalIcon svg { width: 18px; height: 18px; }
+.capitalIcon.isTag { color: #5b8f6a; }
+.capitalIcon.isChart { color: #4f7f5c; }
+
+@media (max-width: 720px) {
+  .capitalPanel {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .capitalStep { display: none; }
+  .capitalValuePrimary { font-size: 24px; }
+}
 
 .quickActionsCard {
   background: #fff;

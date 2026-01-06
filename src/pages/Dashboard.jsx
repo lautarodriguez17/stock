@@ -19,6 +19,12 @@ export default function Dashboard({ onGoToProducts, onGoToMovements, onViewProdu
     .filter((p) => p.stock <= (p.minStock ?? 0))
     .sort((a, b) => a.stock - b.stock);
 
+  const missingUnits = lowProducts.reduce((sum, product) => {
+    const minStock = product.minStock ?? 0;
+    const diff = minStock - (product.stock ?? 0);
+    return diff > 0 ? sum + diff : sum;
+  }, 0);
+
   const salesHistory = useMemo(
     () => computeSalesHistory(state.movements, state.products),
     [state.movements, state.products]
@@ -89,26 +95,174 @@ export default function Dashboard({ onGoToProducts, onGoToMovements, onViewProdu
       </section>
 
       <div className="summaryGrid">
-        <section className="infoCard">
+        <section className="infoCard summaryCard">
           <h3 className="infoTitle">Resumen Operativo</h3>
-          <div className="infoItem">Productos activos: <strong>{metrics.totalProducts}</strong></div>
-          <div className="infoItem">Con stock bajo: <strong>{metrics.lowStockCount}</strong></div>
+          <div className="summaryCompact">
+            <div className="summaryColumn">
+              <div className="summaryRow isNeutral">
+                <span className="summaryIcon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" role="presentation">
+                    <path
+                      d="M3 7l9-4 9 4-9 4-9-4z"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.8"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V7"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.8"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </span>
+                <span className="summaryLabel">Productos activos</span>
+                <span className="summaryValue">{formatCount(metrics.totalProducts)}</span>
+              </div>
+           <div className="summaryRow isMissing">
+                <span className="summaryIcon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" role="presentation">
+                    <path
+                      d="M3 7l9-4 9 4-9 4-9-4z"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.8"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V7"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.8"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M8 14h8"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.8"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                </span>
+                <span className="summaryLabel">Faltan</span>
+                <span className="summaryValue">{formatCount(missingUnits)}</span>
+              </div>
+            </div>
+
+            <div className="summaryColumn">
+              <div className="summaryRow isAlert">
+                <span className="summaryIcon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" role="presentation">
+                    <path
+                      d="M12 3l10 18H2L12 3z"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.8"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M12 9v5"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.8"
+                      strokeLinecap="round"
+                    />
+                    <circle cx="12" cy="17" r="1.1" fill="currentColor" />
+                  </svg>
+                </span>
+                <span className="summaryLabel">Con stock bajo</span>
+                <span className="summaryValue">{formatCount(metrics.lowStockCount)}</span>
+              </div>
+            
+            </div>
+          </div>
         </section>
 
         <section className="infoCard">
           <h3 className="infoTitle">Capital en Stock</h3>
-          <div className="infoColumns">
-            <div>
-              <div className="infoLabel">Costo total:</div>
-              <div className="infoAmount">{money(metrics.valuation)}</div>
+          <div className="capitalPanel">
+            <div className="capitalItem isInvested">
+              <div className="capitalLabel">Invertido</div>
+              <div className="capitalValue">{money(metrics.valuation)}</div>
             </div>
-            <div>
-              <div className="infoLabel">Ganancia bruta:</div>
-              <div className="infoAmount">{money(metrics.grossSales)}</div>
+
+            <div className="capitalStep" aria-hidden="true">
+              <span className="capitalArrow">
+                <svg viewBox="0 0 64 16" role="presentation">
+                  <path
+                    d="M1 8h46m0 0l-6-6m6 6l-6 6"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </span>
+              <span className="capitalIcon isTag">
+                <svg viewBox="0 0 24 24" role="presentation">
+                  <path
+                    d="M20.59 13.41l-7.18 7.18a2 2 0 01-2.83 0l-7.17-7.17A2 2 0 013 11.99V5a2 2 0 012-2h6.99a2 2 0 011.41.59l7.19 7.18a2 2 0 010 2.83z"
+                    fill="currentColor"
+                  />
+                  <circle cx="7.5" cy="7.5" r="1.7" fill="#f8fafc" />
+                </svg>
+              </span>
             </div>
-            <div>
-              <div className="infoLabel">Ganancia:</div>
-              <div className="infoAmount metricNet">{money(metrics.potentialMargin)}</div>
+
+            <div className="capitalItem isSales">
+              <div className="capitalLabel">Ventas</div>
+              <div className="capitalValue">{money(metrics.grossSales)}</div>
+            </div>
+
+            <div className="capitalStep" aria-hidden="true">
+              <span className="capitalArrow">
+                <svg viewBox="0 0 64 16" role="presentation">
+                  <path
+                    d="M1 8h46m0 0l-6-6m6 6l-6 6"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </span>
+              <span className="capitalIcon isChart">
+                <svg viewBox="0 0 24 24" role="presentation">
+                  <path
+                    d="M4 19V9m6 10v-5m6 5v-8"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.4"
+                    strokeLinecap="round"
+                  />
+                  <path
+                    d="M4 9l6-4 4 3 6-6"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.4"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M20 2v4h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.4"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </span>
+            </div>
+
+            <div className="capitalItem isNet">
+              <div className="capitalLabel">Ganancia neta</div>
+              <div className="capitalValue capitalValuePrimary">{money(metrics.potentialMargin)}</div>
             </div>
           </div>
           <p className="muted">Estimado sobre productos activos</p>
@@ -176,6 +330,10 @@ function money(n) {
     currency: "ARS",
     maximumFractionDigits: 0
   });
+}
+
+function formatCount(n) {
+  return Number(n || 0).toLocaleString("es-AR");
 }
 
 function computeSalesHistory(movements, products) {
