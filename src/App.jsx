@@ -26,6 +26,13 @@ function AppContent() {
   const [productFocusId, setProductFocusId] = useState(null);
   const [restockFocusId, setRestockFocusId] = useState(null);
 
+  const goToRestock = (productId) => {
+    setRestockFocusId(productId);
+    setProductFocusId(null);
+    setMovementTypePreset(null);
+    setTab("restock");
+  };
+
   const tabs = useMemo(
     () => {
       const items = [
@@ -77,12 +84,7 @@ function AppContent() {
             setMovementTypePreset(null);
             setTab("products");
           }}
-          onRestockProduct={(productId) => {
-            setRestockFocusId(productId);
-            setProductFocusId(null);
-            setMovementTypePreset(null);
-            setTab("restock");
-          }}
+          onRestockProduct={goToRestock}
         />
       )}
       {tab === "products" && (
@@ -91,7 +93,12 @@ function AppContent() {
           onFocusHandled={() => setProductFocusId(null)}
         />
       )}
-      {tab === "movements" && <MovementsPage defaultType={movementTypePreset} />}
+      {tab === "movements" && (
+        <MovementsPage
+          defaultType={movementTypePreset}
+          onGoToRestock={goToRestock}
+        />
+      )}
       {tab === "restock" && (
         <RestockPage
           focusProductId={restockFocusId}

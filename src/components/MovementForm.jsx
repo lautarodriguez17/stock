@@ -16,7 +16,8 @@ export default function MovementForm({
   onSubmit,
   errors,
   defaultType,
-  allowedTypes
+  allowedTypes,
+  onLowStockAlert
 }) {
   const searchInputId = useId();
   const searchBoxRef = useRef(null);
@@ -217,6 +218,22 @@ export default function MovementForm({
 
     const ok = onSubmit({ productId, type, qty, note });
     if (ok) {
+      if (type === MovementType.OUT && onLowStockAlert) {
+        const product = products.find((p) => p.id === productId);
+        const currentStock = stockById[productId] ?? 0;
+        const nextStock = currentStock - qtyNumber;
+        const minStock = product?.minStock ?? 0;
+        if (nextStock <= minStock) {
+          onLowStockAlert({
+            productId,
+            productName: product?.name || "Producto",
+            sku: product?.sku || "",
+            imageUrl: product?.imageUrl || product?.image || "",
+            stock: nextStock,
+            minStock
+          });
+        }
+      }
       setQty(1);
       setNote("");
       requestAnimationFrame(() => {

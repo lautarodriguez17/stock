@@ -522,6 +522,81 @@ width: 56px;
 .movementOUT { background: #fff1f2; color: #b91c1c; border-color: #fecdd3; }
 .movementADJUST { background: #fefce8; color: #92400e; border-color: #fde68a; }
 
+.stockToastHost {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 120;
+  max-width: 380px;
+}
+.stockToast {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 14px 28px rgba(15, 23, 42, 0.18);
+  overflow: hidden;
+  animation: stockToastIn 240ms ease-out forwards;
+}
+.stockToast.isClosing {
+  animation: stockToastOut 220ms ease-in forwards;
+}
+.stockToastHeader {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: #c7212b;
+  color: #fff;
+}
+.stockToastIcon { font-size: 16px; }
+.stockToastTitle { font-size: 13px; font-weight: 800; }
+.stockToastClose {
+  border: none;
+  background: transparent;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+}
+.stockToastBody {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  padding: 10px 18px 6px 12px;
+  color: #374151;
+}
+.stockToastText { display: grid; gap: 8px; }
+.stockToastLine { font-size: 12px; font-weight: 700; }
+.stockToastSecondary { font-size: 12px; font-weight: 600; color: #6b7280; }
+.stockToastProduct { color: #111827; }
+.stockToastSku { margin-left: 4px; color: #9ca3af; font-weight: 700; font-size: 11px; }
+.stockToastMeta { font-size: 11px; color: #9ca3af; }
+.stockToastActions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 6px 12px 12px;
+}
+.stockToastButton {
+  border: 1px solid #e5e7eb;
+  background: #f9fafb;
+  color: #374151;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+}
+.stockToastButton:hover { background: #fff; }
+
+@keyframes stockToastIn {
+  from { opacity: 0; transform: translateX(18px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes stockToastOut {
+  from { opacity: 1; transform: translateX(0); }
+  to { opacity: 0; transform: translateX(18px); }
+}
+
 .summaryGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
 .infoCard {
   background: #fff;
@@ -893,6 +968,12 @@ width: 56px;
   .stockRow { flex-wrap: wrap; gap: 10px; }
   .infoColumns { flex-direction: column; gap: 12px; }
   .countFilters, .backupActions { flex-direction: column; align-items: stretch; gap: 10px; }
+  .stockToastHost {
+    left: 12px;
+    right: 12px;
+    top: 12px;
+    max-width: none;
+  }
 
   .loginShell { width: 100%; padding-top: 70px; }
   .loginLogo { width: 200px; height: 200px; }
