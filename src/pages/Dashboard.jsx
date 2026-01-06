@@ -184,67 +184,59 @@ export default function Dashboard({ onGoToProducts, onGoToMovements, onViewProdu
         <section className="infoCard">
           <h3 className="infoTitle">Capital en Stock</h3>
           <div className="capitalPanel">
-            <div className="capitalItem isInvested">
-              <div className="capitalLabel">Invertido</div>
-              <div className="capitalValue">{money(metrics.valuation)}</div>
+            <div className="capitalMetric isCost">
+              <span className="capitalIcon isCost" aria-hidden="true">$</span>
+              <div className="capitalText">
+                <div className="capitalLabel">Costo total</div>
+                <div className="capitalValue">{money(metrics.valuation)}</div>
+              </div>
             </div>
 
-            <div className="capitalStep" aria-hidden="true">
-              <span className="capitalArrow">
-                <svg viewBox="0 0 64 16" role="presentation">
-                  <path
-                    d="M1 8h46m0 0l-6-6m6 6l-6 6"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </span>
-              <span className="capitalIcon isTag">
+            <div className="capitalDivider" aria-hidden="true" />
+
+            <div className="capitalMetric isGross">
+              <span className="capitalIcon isGross" aria-hidden="true">
                 <svg viewBox="0 0 24 24" role="presentation">
                   <path
-                    d="M20.59 13.41l-7.18 7.18a2 2 0 01-2.83 0l-7.17-7.17A2 2 0 013 11.99V5a2 2 0 012-2h6.99a2 2 0 011.41.59l7.19 7.18a2 2 0 010 2.83z"
+                    d="M9 3h6l1 3H8l1-3z"
                     fill="currentColor"
                   />
-                  <circle cx="7.5" cy="7.5" r="1.7" fill="#f8fafc" />
-                </svg>
-              </span>
-            </div>
-
-            <div className="capitalItem isSales">
-              <div className="capitalLabel">Ventas</div>
-              <div className="capitalValue">{money(metrics.grossSales)}</div>
-            </div>
-
-            <div className="capitalStep" aria-hidden="true">
-              <span className="capitalArrow">
-                <svg viewBox="0 0 64 16" role="presentation">
                   <path
-                    d="M1 8h46m0 0l-6-6m6 6l-6 6"
+                    d="M7 6h10l2 4-2 9H7L5 10l2-4z"
+                    fill="currentColor"
+                  />
+                  <path
+                    d="M12 10c-1.2 0-2 .6-2 1.6 0 1.1 1 1.5 2.1 1.8 1 .3 1.4.5 1.4 1 0 .5-.5.9-1.3.9-.8 0-1.5-.3-2-.7"
                     fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
+                    stroke="#f8fafc"
+                    strokeWidth="1.4"
                     strokeLinecap="round"
-                    strokeLinejoin="round"
                   />
                 </svg>
               </span>
-              <span className="capitalIcon isChart">
+              <div className="capitalText">
+                <div className="capitalLabel">Ganancia bruta</div>
+                <div className="capitalValue">{money(metrics.grossSales)}</div>
+              </div>
+            </div>
+
+            <div className="capitalDivider" aria-hidden="true" />
+
+            <div className="capitalMetric isNet">
+              <span className="capitalIcon isNet" aria-hidden="true">
                 <svg viewBox="0 0 24 24" role="presentation">
                   <path
                     d="M4 19V9m6 10v-5m6 5v-8"
                     fill="none"
                     stroke="currentColor"
-                    strokeWidth="2.4"
+                    strokeWidth="2.2"
                     strokeLinecap="round"
                   />
                   <path
                     d="M4 9l6-4 4 3 6-6"
                     fill="none"
                     stroke="currentColor"
-                    strokeWidth="2.4"
+                    strokeWidth="2.2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                   />
@@ -252,17 +244,16 @@ export default function Dashboard({ onGoToProducts, onGoToMovements, onViewProdu
                     d="M20 2v4h-4"
                     fill="none"
                     stroke="currentColor"
-                    strokeWidth="2.4"
+                    strokeWidth="2.2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                   />
                 </svg>
               </span>
-            </div>
-
-            <div className="capitalItem isNet">
-              <div className="capitalLabel">Ganancia neta</div>
-              <div className="capitalValue capitalValuePrimary">{money(metrics.potentialMargin)}</div>
+              <div className="capitalText">
+                <div className="capitalLabel">Ganancia</div>
+                <div className="capitalValue">{money(metrics.potentialMargin)}</div>
+              </div>
             </div>
           </div>
           <p className="muted">Estimado sobre productos activos</p>
