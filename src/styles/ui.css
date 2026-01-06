@@ -26,7 +26,9 @@ width: 56px;
   font-weight: 700;
   border: 1px solid transparent;
 }
-.statusWarning { background: #fde6ad; border-color: #f5d989; color: #8a5b00; }
+.statusWarning {     background: #f5eb9da3;
+    border-color: #ded328;
+    color: #8a5b00; }
 .statusOk { background: #e6f6e8; border-color: #c5e9c9; color: #256c2c; }
 .statusEmoji { font-size: 16px; }
 .statusText strong { font-weight: 800; }
@@ -48,25 +50,59 @@ width: 56px;
 
 .tabs {
   display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  background: #f4f5f8;
-  padding: 6px;
-  border-radius: 14px;
-  border: 1px solid #e6e8ef;
+  gap: 6px;
+  flex-wrap: nowrap;
+  align-items: center;
+  background: #f6f7fb;
+  padding: 6px 8px;
+  border-radius: 18px;
+  border: 1px solid #e4e7ef;
+  overflow-x: auto;
 }
 .tab {
   border: none;
   background: transparent;
-  color: #4b5563;
-  padding: 10px 16px;
-  border-radius: 12px;
+  color: #374151;
+  padding: 10px 14px 12px;
+  border-radius: 14px;
   cursor: pointer;
   font-weight: 700;
-  transition: background 0.15s ease, color 0.15s ease;
+  transition: color 0.15s ease, background 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  white-space: nowrap;
 }
-.tab:hover { color: #1f2937; }
-.tabActive { background: #c7212b; color: #fff; box-shadow: 0 10px 26px rgba(199, 33, 43, 0.25); }
+.tab:hover { background: rgba(255, 255, 255, 0.7); }
+.tabActive {
+  color: #c7212b;
+}
+.tabActive::after {
+  content: "";
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 4px;
+  height: 3px;
+  border-radius: 999px;
+  background: #c7212b;
+}
+.tabIcon {
+  width: 20px;
+  height: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.tabIcon svg { width: 20px; height: 20px; }
+.tabActive .tabIcon { color: #c7212b; }
+.tab-dashboard .tabIcon { color: #c7212b; }
+.tab-products .tabIcon { color: #f59e0b; }
+.tab-movements .tabIcon { color: #2563eb; }
+.tab-restock .tabIcon { color: #16a34a; }
+.tab-count .tabIcon { color: #7c3aed; }
+.tab-backup .tabIcon { color: #6b7280; }
 .mobileNav {
   display: none;
   flex-direction: column;
