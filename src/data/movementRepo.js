@@ -3,6 +3,7 @@ import { seedMovements } from "./seeds.js";
 import { getMovementDate } from "../analytics/hours.js";
 
 const KEY = "movements";
+const MAX_MOVEMENTS = 2000;
 
 export const movementRepo = {
   getAll() {
@@ -21,15 +22,54 @@ export const movementRepo = {
       hasChanges = true;
       return { ...movement, createdAt: Date.now() };
     });
-
-    if (hasChanges) {
-      writeJSON(KEY, normalized);
+    const trimmed = normalized.length > MAX_MOVEMENTS
+      ? normalized.slice(0, MAX_MOVEMENTS)
+      : normalized;
+    if (trimmed.length !== normalized.length) {
+      hasChanges = true;
     }
 
-    return normalized;
+    if (hasChanges) {
+      try {
+        writeJSON(KEY, trimmed);
+      } catch (error) {
+        if (!isQuotaExceeded(error)) {
+          throw error;
+        }
+      }
+    }
+
+    return trimmed;
   },
 
   saveAll(movements) {
-    writeJSON(KEY, movements);
+    const trimmed = Array.isArray(movements)
+      ? movements.slice(0, MAX_MOVEMENTS)
+      : movements;
+    try {
+      writeJSON(KEY, trimmed);
+    } catch (error) {
+      if (!isQuotaExceeded(error) || !Array.isArray(trimmed)) {
+        throw error;
+      }
+      const fallbackSize = Math.max(200, Math.floor(trimmed.length / 2));
+      const fallback = trimmed.slice(0, fallbackSize);
+      try {
+        writeJSON(KEY, fallback);
+      } catch (innerError) {
+        if (!isQuotaExceeded(innerError)) {
+          throw innerError;
+        }
+      }
+    }
   }
 };
+
+function isQuotaExceeded(error) {
+  if (!error) return false;
+  return (
+    error.name === "QuotaExceededError"
+    || error.name === "NS_ERROR_DOM_QUOTA_REACHED"
+    || error.code === 22
+  );
+}

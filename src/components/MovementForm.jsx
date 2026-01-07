@@ -41,7 +41,7 @@ export default function MovementForm({
   );
   const isTypeLocked = resolvedAllowedTypes.length === 1;
 
-  const [category, setCategory] = useState(categoryOptions[0] || "");
+  const [category, setCategory] = useState("");
   const [productId, setProductId] = useState("");
   const [type, setType] = useState(() =>
     resolveInitialType(defaultType, resolvedAllowedTypes)
@@ -88,9 +88,9 @@ export default function MovementForm({
       }
       return;
     }
-    if (!categoryOptions.includes(category)) {
+    if (category && !categoryOptions.includes(category)) {
       manualCategoryChangeRef.current = false;
-      setCategory(categoryOptions[0]);
+      setCategory("");
     }
   }, [categoryOptions, category]);
 
@@ -108,10 +108,7 @@ export default function MovementForm({
 
     const isValidSelection = filteredProducts.some((product) => product.id === productId);
     if (!isValidSelection) {
-      const nextProductId = filteredProducts[0]?.id || "";
-      if (nextProductId && nextProductId !== productId) {
-        setProductId(nextProductId);
-      }
+      setProductId("");
     }
 
     if (manualCategoryChangeRef.current) {
@@ -320,7 +317,9 @@ export default function MovementForm({
         >
           {!categoryOptions.length ? (
             <option value="">Sin categorias</option>
-          ) : null}
+          ) : (
+            <option value="">Selecciona categoria</option>
+          )}
           {categoryOptions.map((option) => (
             <option key={option} value={option}>
               {option}
@@ -341,7 +340,12 @@ export default function MovementForm({
           disabled={!category || !filteredProducts.length}
           ref={productSelectRef}
         >
-          {!category ? <option value="">Selecciona categoria</option> : null}
+          {!category ? (
+            <option value="">Selecciona categoria</option>
+          ) : null}
+          {category && filteredProducts.length ? (
+            <option value="">Selecciona producto</option>
+          ) : null}
           {category && !filteredProducts.length ? (
             <option value="">Sin productos</option>
           ) : null}

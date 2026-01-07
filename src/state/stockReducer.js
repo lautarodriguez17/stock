@@ -1,5 +1,7 @@
 import { ActionType } from "./actions.js";
 
+const MAX_MOVEMENTS = 2000;
+
 export const initialState = {
   products: [],
   movements: []
@@ -34,9 +36,10 @@ export function stockReducer(state, action) {
     }
 
     case ActionType.ADD_MOVEMENT: {
+      const nextMovements = [action.payload, ...state.movements];
       return {
         ...state,
-        movements: [action.payload, ...state.movements]
+        movements: nextMovements.slice(0, MAX_MOVEMENTS)
       };
     }
 
