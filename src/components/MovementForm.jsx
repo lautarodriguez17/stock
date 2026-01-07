@@ -99,16 +99,24 @@ export default function MovementForm({
       if (productId) {
         setProductId("");
       }
-      if (manualCategoryChangeRef.current) setQty(1);
+      if (manualCategoryChangeRef.current) {
+        setQty(1);
+        manualCategoryChangeRef.current = false;
+      }
       return;
     }
-    if (!filteredProducts.some((product) => product.id === productId)) {
-      if (manualCategoryChangeRef.current) {
-        setProductId("");
-        setQty(1);
-        return;
+
+    const isValidSelection = filteredProducts.some((product) => product.id === productId);
+    if (!isValidSelection) {
+      const nextProductId = filteredProducts[0]?.id || "";
+      if (nextProductId && nextProductId !== productId) {
+        setProductId(nextProductId);
       }
-      setProductId(filteredProducts[0].id);
+    }
+
+    if (manualCategoryChangeRef.current) {
+      setQty(1);
+      manualCategoryChangeRef.current = false;
     }
   }, [filteredProducts, productId]);
 
@@ -396,7 +404,13 @@ export default function MovementForm({
         </div>
       ) : null}
 
-      <button className="btnPrimary" type="submit">Registrar movimiento</button>
+      <button
+        className="btnPrimary"
+        type="submit"
+        disabled={!productId || !filteredProducts.length}
+      >
+        Registrar movimiento
+      </button>
     </form>
   );
 }
