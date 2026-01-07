@@ -506,6 +506,185 @@ width: 56px;
   gap: 10px;
   margin-bottom: 8px;
 }
+.salesHoursCard { display: flex; flex-direction: column; gap: 12px; }
+.salesHoursHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.salesHoursControls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.salesHoursTabs,
+.salesHoursToggle {
+  display: inline-flex;
+  gap: 6px;
+  padding: 4px;
+  border-radius: 999px;
+  border: 1px solid #e4e7ef;
+  background: #f6f7fb;
+}
+.salesHoursTab,
+.salesHoursToggleBtn {
+  border: none;
+  background: transparent;
+  color: #4b5563;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.12s ease, color 0.12s ease, box-shadow 0.12s ease;
+}
+.salesHoursTab.isActive,
+.salesHoursToggleBtn.isActive {
+  background: #2563eb;
+  color: #fff;
+  box-shadow: 0 6px 14px rgba(37, 99, 235, 0.2);
+}
+.salesHoursSummary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 8px 16px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid #eef0f4;
+  background: #f8fafc;
+}
+.salesHoursSummaryItem { display: grid; gap: 4px; }
+.salesHoursSummaryLabel {
+  font-size: 12px;
+  font-weight: 700;
+  color: #6b7280;
+}
+.salesHoursSummaryValue {
+  font-size: 15px;
+  font-weight: 800;
+  color: #111827;
+}
+.salesHoursSummarySecondary {
+  margin-left: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #6b7280;
+}
+.salesHoursChart { display: grid; gap: 6px; }
+.salesHoursValues {
+  display: grid;
+  grid-template-columns: repeat(24, minmax(0, 1fr));
+  gap: 6px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #6b7280;
+  text-align: center;
+}
+.salesHoursValue { opacity: 0.9; }
+.salesHoursValue.isZero { opacity: 0.4; }
+.salesHoursValue.isSelected { color: #111827; }
+.salesHoursBars {
+  display: grid;
+  grid-template-columns: repeat(24, minmax(0, 1fr));
+  align-items: stretch;
+  gap: 6px;
+  height: 160px;
+  padding: 12px 6px 8px;
+  border-radius: 12px;
+  border: 1px solid #eef0f4;
+  background: #f8fafc;
+}
+.salesHoursBar { display: flex; align-items: flex-end; height: 100%; }
+.salesHoursBarButton {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+}
+.salesHoursBarFill {
+  width: 100%;
+  display: block;
+  border-radius: 8px 8px 6px 6px;
+  background: #c7d2fe;
+  transition: height 0.18s ease, background 0.18s ease, transform 0.12s ease;
+}
+.salesHoursBarButton:hover .salesHoursBarFill { transform: translateY(-2px); }
+.salesHoursBar.isPeak .salesHoursBarFill { background: #2563eb; }
+.salesHoursBar.isSelected .salesHoursBarFill { background: #395184; }
+.salesHoursBar.isSelected .salesHoursBarButton {
+  /* outline: 2px solid #111827; */
+  outline-offset: 2px;
+  border-radius: 10px;
+}
+.salesHoursAxis {
+  display: grid;
+  grid-template-columns: repeat(24, minmax(0, 1fr));
+  gap: 6px;
+  font-size: 11px;
+  color: #6b7280;
+}
+.salesHoursAxisLabel { text-align: center; opacity: 0; }
+.salesHoursAxisLabel.isVisible { opacity: 1; }
+.salesHoursSelection {
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px dashed #e5e7eb;
+  background: #f9fafb;
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+}
+.salesHoursSelection.isMuted { color: #6b7280; }
+.salesHoursEmpty {
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px dashed #e5e7eb;
+  background: #f9fafb;
+  color: #6b7280;
+  font-weight: 700;
+}
+.movementFilters {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+.movementFilterTabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+.movementFilterTab {
+  border: 1px solid #e2e5ec;
+  background: #fff;
+  color: #374151;
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.12s ease, border-color 0.12s ease, color 0.12s ease;
+}
+.movementFilterTab.isActive {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: #fff;
+  box-shadow: 0 8px 18px rgba(37, 99, 235, 0.2);
+}
+.movementRangeLabel {
+  color: #6b7280;
+  font-size: 12px;
+  font-weight: 600;
+}
 .movementType {
   display: inline-flex;
   align-items: center;
@@ -967,6 +1146,12 @@ width: 56px;
   .criticalRow { flex-direction: column; align-items: flex-start; }
   .stockRow { flex-wrap: wrap; gap: 10px; }
   .infoColumns { flex-direction: column; gap: 12px; }
+  .salesHoursHeader { align-items: flex-start; }
+  .salesHoursControls { width: 100%; flex-direction: column; align-items: stretch; }
+  .salesHoursTabs, .salesHoursToggle { width: 100%; justify-content: space-between; }
+  .salesHoursValues { gap: 4px; font-size: 9px; }
+  .salesHoursBars { height: 140px; gap: 4px; }
+  .salesHoursAxis { gap: 4px; font-size: 10px; }
   .countFilters, .backupActions { flex-direction: column; align-items: stretch; gap: 10px; }
   .stockToastHost {
     left: 12px;

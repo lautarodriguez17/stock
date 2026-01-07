@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 import { useStockContext } from "../state/StockContext.jsx";
 import { useStock } from "../hooks/useStock.js";
 import Table from "../components/Table.jsx";
+import SalesHoursCard from "../components/SalesHoursCard.jsx";
 import { MovementType } from "../domain/types.js";
 import { can, PermissionAction } from "../domain/permissions.js";
 
@@ -309,6 +310,8 @@ export default function Dashboard({ onGoToProducts, onGoToMovements, onViewProdu
           scrollThreshold={6}
         />
       </section>
+
+      <SalesHoursCard movements={state.movements} />
 
       <section>
         <h3 className="infoTitle">Historial de ventas</h3>

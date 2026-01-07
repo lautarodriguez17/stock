@@ -33,7 +33,8 @@ export function useMovements() {
       qty: Number(input.qty),
       note: (input.note || "").trim(),
       user: "Admin",
-      atISO: new Date().toISOString()
+      atISO: new Date().toISOString(),
+      createdAt: Date.now()
     };
 
     const errors = validateMovement(movement, state.products);
