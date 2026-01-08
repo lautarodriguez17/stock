@@ -326,11 +326,11 @@ export default function Dashboard({ onGoToProducts, onGoToMovements, onViewProdu
                   Ganancia neta: <strong className="metricValue metricNet">{money(netProfit)}</strong>
                 </div>
                 <div className="infoItem">
-                  Ganancia bruta: <strong className="metricValue metricGross">{money(period.data.sales)}</strong>
+                  Ventas: <strong className="metricValue metricGross">{money(period.data.sales)}</strong>
                 </div>
-                {/* <div className="infoItem">
+                <div className="infoItem">
                   Costos: <strong className="metricValue metricCosts">{money(period.data.costs)}</strong>
-                </div> */}
+                </div>
                
               </div>
             );
