@@ -49,7 +49,7 @@ export default function BackupPage() {
       "cost",
       "price",
       "stock",
-      "minStock",
+      "stockMin",
       "active"
     ];
     const rows = state.products.map((product) => ({
@@ -59,7 +59,7 @@ export default function BackupPage() {
       cost: product.cost ?? 0,
       price: product.price ?? 0,
       stock: stockById[product.id] ?? 0,
-      minStock: product.minStock ?? 0,
+      stockMin: product.stockMin ?? 0,
       active: product.active !== false ? "true" : "false"
     }));
     downloadFile("products.csv", buildCsv(headers, rows), "text/csv;charset=utf-8;");

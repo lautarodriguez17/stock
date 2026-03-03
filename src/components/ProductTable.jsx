@@ -7,8 +7,8 @@ export default function ProductTable({ products, stockById, onEdit, onDeactivate
   const rows = useMemo(() => {
     return products.map((p) => {
       const stock = stockById[p.id] ?? 0;
-      const low = stock <= (p.minStock ?? 0);
-      const status = low ? (stock === 0 ? "Bajo" : "Stock bajo") : "OK";
+      const low = stock <= (p.stockMin ?? 0);
+      const status = low ? (stock === 0 ? "Sin stock" : "Stock bajo") : "OK";
       const rowId = p.id ? `product-${p.id}` : "";
       return {
         ...p,
@@ -39,7 +39,7 @@ export default function ProductTable({ products, stockById, onEdit, onDeactivate
       header: "Estado",
       render: (r) =>
         r.status === "OK" ? null : (
-          <span className={`pillStatus ${r.status === "Bajo" ? "pillDanger" : "pillWarn"}`}>
+          <span className={`pillStatus ${r.status === "Sin stock" ? "pillDanger" : "pillWarn"}`}>
             {r.status}
           </span>
         )
@@ -49,7 +49,7 @@ export default function ProductTable({ products, stockById, onEdit, onDeactivate
       header: "Stock / Min",
       render: (r) => (
         <span className="stockMin">
-          {r.stock} <span className="muted">/</span> {r.minStock ?? 0}
+          {r.stock} <span className="muted">/</span> {r.stockMin ?? 0}
         </span>
       )
     },
@@ -86,7 +86,7 @@ export default function ProductTable({ products, stockById, onEdit, onDeactivate
                 <p className="mobileMuted">{r.sku || "Sin SKU"}</p>
               </div>
               {r.status === "OK" ? null : (
-                <span className={`pillStatus ${r.status === "Bajo" ? "pillDanger" : "pillWarn"}`}>
+                <span className={`pillStatus ${r.status === "Sin stock" ? "pillDanger" : "pillWarn"}`}>
                   {r.status}
                 </span>
               )}
@@ -110,7 +110,7 @@ export default function ProductTable({ products, stockById, onEdit, onDeactivate
 
             <div className="mobileCardRow">
               <span className="mobileLabel">Stock / Min</span>
-              <span className="mobileValue">{r.stock} / {r.minStock ?? 0}</span>
+              <span className="mobileValue">{r.stock} / {r.stockMin ?? 0}</span>
             </div>
 
             <div className="mobileCardActions">

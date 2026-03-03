@@ -154,7 +154,7 @@ export default function MovementsPage({ defaultType, onGoToRestock }) {
                   Te estás quedando sin stock de este producto.
                 </div>
                 <div className="stockToastMeta">
-                  Quedan: {formatCount(stockToast.stock)} (mínimo: {formatCount(stockToast.minStock)})
+                  Quedan: {formatCount(stockToast.stock)} (mínimo: {formatCount(stockToast.stockMin)})
                 </div>
               </div>
             </div>

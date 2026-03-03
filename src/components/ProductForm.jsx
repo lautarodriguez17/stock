@@ -8,7 +8,7 @@ const empty = {
   category: "",
   cost: "",
   price: "",
-  minStock: ""
+  stockMin: ""
 };
 
 export default function ProductForm({
@@ -31,7 +31,7 @@ export default function ProductForm({
         category: initialValue.category || "",
         cost: String(initialValue.cost ?? ""),
         price: String(initialValue.price ?? ""),
-        minStock: String(initialValue.minStock ?? "")
+        stockMin: String(initialValue.stockMin ?? "")
       });
     } else {
       setForm(empty);
@@ -88,8 +88,8 @@ export default function ProductForm({
             className="input"
             type="number"
             min="0"
-            value={form.minStock}
-            onChange={(e) => setForm((f) => ({ ...f, minStock: e.target.value }))}
+            value={form.stockMin}
+            onChange={(e) => setForm((f) => ({ ...f, stockMin: e.target.value }))}
             placeholder="Ej: 10"
           />
         </Field>

@@ -32,7 +32,7 @@ export function useProducts() {
       category: (input.category || "").trim(),
       cost: Number(input.cost || 0),
       price: Number(input.price || 0),
-      minStock: Number(input.minStock || 0),
+      stockMin: Number(input.stockMin || 0),
       active: input.active ?? true
     };
 

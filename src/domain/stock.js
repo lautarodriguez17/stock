@@ -8,7 +8,12 @@ import { MovementType } from "./types.js";
  * - ADJUST setea stock absoluto (qty)
  */
 export function computeStock(products, movements) {
-  const stockById = Object.fromEntries(products.map((p) => [p.id, 0]));
+  const stockById = Object.fromEntries(
+    products.map((p) => {
+      const base = Number(p?.stock ?? 0);
+      return [p.id, Number.isFinite(base) ? base : 0];
+    })
+  );
 
   for (const m of movements) {
     if (!(m.productId in stockById)) continue;
@@ -40,7 +45,7 @@ export function computeMetrics(products, stockById, movements = []) {
 
   for (const p of activeProducts) {
     const stock = stockById[p.id] ?? 0;
-    if (stock <= (p.minStock ?? 0)) lowStockCount += 1;
+    if (stock <= (p.stockMin ?? 0)) lowStockCount += 1;
 
     valuation += stock * (p.cost ?? 0);
     potentialMargin += stock * ((p.price ?? 0) - (p.cost ?? 0));

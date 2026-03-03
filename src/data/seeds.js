@@ -9,7 +9,7 @@ export function seedProducts() {
       category: "Bebidas",
       cost: 350,
       price: 700,
-      minStock: 10,
+      stockMin: 10,
       active: true
     },
     {
@@ -19,7 +19,7 @@ export function seedProducts() {
       category: "Golosinas",
       cost: 80,
       price: 200,
-      minStock: 20,
+      stockMin: 20,
       active: true
     }
   ];

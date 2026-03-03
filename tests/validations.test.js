@@ -5,7 +5,7 @@ import { MovementType } from "../src/domain/types.js";
 describe("validateProduct", () => {
   it("requiere campos y SKU único", () => {
     const all = [{ id: "a", sku: "AAA" }];
-    const p = { id: "b", name: "", sku: "AAA", category: "", cost: -1, price: -2, minStock: -3 };
+    const p = { id: "b", name: "", sku: "AAA", category: "", cost: -1, price: -2, stockMin: -3 };
     const errors = validateProduct(p, all);
 
     expect(errors.length).toBeGreaterThan(0);

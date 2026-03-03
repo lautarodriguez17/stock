@@ -33,7 +33,7 @@ export default function InventoryCountPage() {
       .filter((p) => {
         if (!onlyLow) return true;
         const stock = stockById[p.id] ?? 0;
-        return stock <= (p.minStock ?? 0);
+        return stock <= (p.stockMin ?? 0);
       })
       .filter((p) => {
         if (categoryFilter === "ALL") return true;

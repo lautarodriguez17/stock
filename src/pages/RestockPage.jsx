@@ -25,7 +25,7 @@ export default function RestockPage({ focusProductId, onFocusHandled }) {
   const lowProducts = useMemo(() => {
     return state.products
       .filter((p) => p.active !== false)
-      .filter((p) => (stockById[p.id] ?? 0) <= (p.minStock ?? 0))
+      .filter((p) => (stockById[p.id] ?? 0) <= (p.stockMin ?? 0))
       .filter((p) => !completedIds[p.id])
       .sort((a, b) => a.name.localeCompare(b.name));
   }, [state.products, stockById, completedIds]);
@@ -62,7 +62,7 @@ export default function RestockPage({ focusProductId, onFocusHandled }) {
   const rows = useMemo(() => {
     return lowProducts.map((product, index) => {
       const stockActual = stockById[product.id] ?? 0;
-      const minStock = product.minStock ?? 0;
+      const stockMin = product.stockMin ?? 0;
       const inputValue = qtyById[product.id];
       const suggested = parseQty(inputValue, getSuggestedQty(product, stockActual));
       const actionQty = parseQty(inputValue, 0);
@@ -70,7 +70,7 @@ export default function RestockPage({ focusProductId, onFocusHandled }) {
         id: product.id,
         name: product.name,
         stockActual,
-        minStock,
+        stockMin,
         suggested,
         actionQty,
         index,
@@ -145,7 +145,7 @@ export default function RestockPage({ focusProductId, onFocusHandled }) {
   const columns = [
     { key: "name", header: "Producto" },
     { key: "stockActual", header: "Stock actual" },
-    { key: "minStock", header: "Stock minimo" },
+    { key: "stockMin", header: "Stock minimo" },
     {
       key: "suggested",
       header: "Cantidad sugerida",
@@ -185,7 +185,7 @@ export default function RestockPage({ focusProductId, onFocusHandled }) {
   const printColumns = [
     { key: "name", header: "Producto" },
     { key: "stockActual", header: "Stock actual" },
-    { key: "minStock", header: "Stock minimo" },
+    { key: "stockMin", header: "Stock minimo" },
     { key: "suggested", header: "Cantidad sugerida" }
   ];
 
@@ -225,7 +225,7 @@ export default function RestockPage({ focusProductId, onFocusHandled }) {
                   >
                     <div className="mobileCardHeader">
                       <h4 className="mobileCardTitle">{row.name}</h4>
-                      <span className="pill">{`Min ${row.minStock}`}</span>
+                      <span className="pill">{`Min ${row.stockMin}`}</span>
                     </div>
 
                     <div className="mobileCardRow">
@@ -291,7 +291,7 @@ function getTargetStock(product, fallback) {
 }
 
 function getSuggestedQty(product, stockActual) {
-  const target = getTargetStock(product, product.minStock ?? 0);
+  const target = getTargetStock(product, product.stockMin ?? 0);
   const diff = target - stockActual;
   return Math.max(0, diff);
 }

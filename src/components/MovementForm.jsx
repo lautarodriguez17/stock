@@ -227,15 +227,15 @@ export default function MovementForm({
         const product = products.find((p) => p.id === productId);
         const currentStock = stockById[productId] ?? 0;
         const nextStock = currentStock - qtyNumber;
-        const minStock = product?.minStock ?? 0;
-        if (nextStock <= minStock) {
+        const stockMin = product?.stockMin ?? 0;
+        if (nextStock <= stockMin) {
           onLowStockAlert({
             productId,
             productName: product?.name || "Producto",
             sku: product?.sku || "",
             imageUrl: product?.imageUrl || product?.image || "",
             stock: nextStock,
-            minStock
+            stockMin
           });
         }
       }

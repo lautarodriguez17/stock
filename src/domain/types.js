@@ -8,7 +8,7 @@
  * - category: string
  * - cost: number
  * - price: number
- * - minStock: number
+ * - stockMin: number
  * - active: boolean
  *
  * Movement:

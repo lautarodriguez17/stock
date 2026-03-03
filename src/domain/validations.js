@@ -9,11 +9,11 @@ export function validateProduct(product, allProducts) {
 
   const cost = Number(product.cost);
   const price = Number(product.price);
-  const minStock = Number(product.minStock);
+  const stockMin = Number(product.stockMin);
 
   if (Number.isNaN(cost) || cost < 0) errors.push("Costo inválido (no negativo).");
   if (Number.isNaN(price) || price < 0) errors.push("Precio inválido (no negativo).");
-  if (Number.isNaN(minStock) || minStock < 0) errors.push("Stock mínimo inválido (no negativo).");
+  if (Number.isNaN(stockMin) || stockMin < 0) errors.push("Stock mínimo inválido (no negativo).");
 
   // SKU único (considerando activos e inactivos, para no duplicar)
   const sku = product.sku?.trim().toLowerCase();
